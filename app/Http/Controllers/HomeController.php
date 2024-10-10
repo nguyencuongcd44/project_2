@@ -30,9 +30,10 @@ class HomeController extends Controller
         return view('front.category', compact('category', 'products'));
     }
 
-    public function detail(Product $product)
+    public function detail(Product $product, Comments $comments)
     {
-        return view('front.product', compact('product'));
+        $comments = Comments::where('product_id', $product->id)->orderBy('id', 'DESC')->get();
+        return view('front.product', compact('product', 'comments'));
     }
 
     //Login

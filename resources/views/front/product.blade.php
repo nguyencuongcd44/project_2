@@ -41,10 +41,34 @@
                         </div>
                     @endif
                     
-                    
+                    @if (!count($comments))
+                        <h3>Chưa có bình luận nào.</h3>
+
+                    @else
+                        <hr>
+                        <div class="">
+                            @foreach ($comments as $comment)
+                                <div class="panel panel-default">
+                                    <div class="panel">
+                                        <h4 class="p-l-10">{{ $comment->user->name }} <small class="text-muted">{{ $comment->created_at }}</small></h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        {{ $comment->text }}
+                                    </div>
+                                    @if (Auth::check() && Auth::User()->id == $comment->user->id)
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm">Edit</button>
+                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                        </div>
+                                    @endif
+                                   
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
                 <div class="panel-footer text-center">
-                    <a href="{{ url('/products') }}" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
+                    <a href="{{ route('home.index') }}" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
                 </div>
             </div>
         </div>

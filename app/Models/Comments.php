@@ -13,6 +13,11 @@ class Comments extends Model
         'id', 
         'text', 
         'product_id',
-        'user_id'
+        'user_id',
+        'created_at'
     ];
+
+    public function user(){
+        return $this->hasOne(User::class, 'id','user_id');
+    }
 }
