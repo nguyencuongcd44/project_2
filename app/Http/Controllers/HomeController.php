@@ -16,8 +16,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // $cats = Category::orderBy('name', 'ASC')->get();
-        $products = Product::orderBy('id', 'DESC')->limit(6)->get();
+        $products = Product::orderBy('id', 'DESC')->paginate(10);
         return view('front.index', compact('products'));
     }
 
@@ -73,5 +72,11 @@ class HomeController extends Controller
         Comments::create($data);
 
         return redirect()->back();
+    }
+
+
+    public function cart()
+    {
+        return view('front.cart');
     }
 }

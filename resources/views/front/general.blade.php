@@ -9,6 +9,10 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        
+
+        {{-- Font Awesome --}}
+        <script src="https://kit.fontawesome.com/a34c25a309.js" crossorigin="anonymous"></script>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,6 +23,25 @@
 
 
         <style>
+            .cart{
+                position: relative;
+            }
+            .qtt-bg{
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background-color: red;
+                display: flex;
+                justify-content: center;
+                align-content: center;
+                
+                .qtt-number{
+                    color: white;
+                }
+            }
             .container{
                 .panel{
                     border-radius: 0;
@@ -47,32 +70,53 @@
     <body>
         <nav class="navbar navbar-inverse">
             <div class="container">
+                <!-- Navbar Brand -->
                 <a class="navbar-brand" href="#">Title</a>
+    
+                <!-- Menu Items căn trái -->
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="">Home</a>
+                        <a href="/">Home</a>
                     </li>
                     <li>
                         <a href="">Category</a>
                     </li>
-                    <li>
-                        <a href="">Products</a>
-                    </li>
                 </ul>
-                <div class="">
+    
+                <!-- Phần này căn phải -->
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Cart Icon -->
+                    <li>
+                        <a href="{{ route('cart') }}">
+                            <i class="fa fa-shopping-cart fa-2x cart"></i>
+                            <span class="qtt-bg">
+                                <strong class="qtt-number">{{ $cart->totalQuantity }}</strong>
+                            </span>
+                        </a>
+                    </li>
+    
+                    <!-- Kiểm tra người dùng đã đăng nhập hay chưa -->
                     @if (Auth::check())
-                        <strong class="" style="color: #fff;">{{ Auth::User()->name }}</strong>
-                        <form action="{{ route('logout', ['url.intended' => url()->current()]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Đăng xuất</button>
-                        </form>
+                        <!-- Hiển thị tên người dùng và nút đăng xuất -->
+                        <li>
+                            <strong class="navbar-text" style="color: #fff;">{{ Auth::User()->name }}</strong>
+                        </li>
+                        <li>
+                            <form action="{{ route('logout', ['url.intended' => url()->current()]) }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-danger navbar-btn">Đăng xuất</button>
+                            </form>
+                        </li>
                     @else
-                        <strong>Bạn chưa đăng nhập</strong>
-                        <a href="{{ route('login') }}" class="btn btn-primary">Đăng Nhập</a>
+                        <!-- Hiển thị nút đăng nhập nếu chưa đăng nhập -->
+                        <li>
+                            <a href="{{ route('login') }}" class="btn btn-primary navbar-btn">Đăng Nhập</a>
+                        </li>
                     @endif
-                </div>
+                </ul>
             </div>
         </nav>
+    
         <div class="container">
             <div class="row">
                 <div class="col-md">
@@ -86,6 +130,7 @@
                 </div>
             </div>
         </div>
+    
         <div class="container">
             @yield('main')
         </div>

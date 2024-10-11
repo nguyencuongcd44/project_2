@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LoginController;
@@ -44,6 +45,25 @@ Route::middleware('savePreUrl')->group(function () {
 
     //product
     Route::get('/product/{product}', [HomeController::class, 'detail'])->name('front.product');
+
+    
+
+    Route::prefix('cart')->group(function () {
+        //cart
+        Route::get('/', [CartController::class, 'cart'])->name('cart');
+
+        //add to cart
+        Route::get('/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+
+        //update
+        Route::get('/update/{product}', [CartController::class, 'update'])->name('cart.update');
+
+        //delete
+        Route::get('/delete/{id}', [CartController::class, 'delete'])->name('cart.delete');
+
+        //clear
+        Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
+    });
 
 });
 
