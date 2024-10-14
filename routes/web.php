@@ -7,6 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,54 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 
+
+
+
+// Account routes ----------------------------------------------------------------
+Route::prefix('account')->group(function () {
+    //login
+    Route::get('/login', [AccountController::class, 'login'])->name('account.login');
+    Route::get('/verify-account/{email}', [AccountController::class, 'verify'])->name('account.verify');
+    Route::post('/login', [AccountController::class, 'check_login']);
+
+    //register
+    Route::get('/register', [AccountController::class, 'register'])->name('account.register');
+    Route::post('/register', [AccountController::class, 'check_register']);
+
+    //profile
+    Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
+    Route::post('/profile', [AccountController::class, 'profile']);
+
+    //change password
+    Route::get('/change-password', [AccountController::class, 'change_password'])->name('account.change-password');
+    Route::post('/change-password', [AccountController::class, 'check_change_password']);
+
+    //forgot password
+    Route::get('/forgot-password', [AccountController::class, 'forgot_password'])->name('account.forgot-password');
+    Route::post('/forgot-password', [AccountController::class, 'check_forgot_password']);
+
+    //reset password
+    Route::get('/reset-password', [AccountController::class, 'reset_password'])->name('account.forgot-password');
+    Route::post('/reset-password', [AccountController::class, 'check_reset_password']);
+});
+
+
+
+
+//Auth Group Routes
+Route::middleware('auth')->group(function () {
+    //post comment
+    Route::post('/comment/{product}', [HomeController::class, 'post_cmt'])->name('front.post_cmt');
+
+    //Admin Group routes ----------------------------------------------------------------
+    Route::prefix('admin')->middleware('role:admin,editor')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+        Route::resources([
+            'category' => CategoryController::class,
+            'product' => ProductController::class,
+        ]);
+    });
+});
 
 
 //Front Group routes----------------------------------------------------------------
@@ -65,22 +114,4 @@ Route::middleware('savePreUrl')->group(function () {
         Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
     });
 
-});
-
-
-//Auth Group Routes
-Route::middleware('auth')->group(function () {
-    //post comment
-    Route::post('/comment/{product}', [HomeController::class, 'post_cmt'])->name('front.post_cmt');
-
-
-
-    //Admin Group routes ----------------------------------------------------------------
-    Route::prefix('admin')->middleware('role:admin,editor')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-        Route::resources([
-            'category' => CategoryController::class,
-            'product' => ProductController::class,
-        ]);
-    });
 });
