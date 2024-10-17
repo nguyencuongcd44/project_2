@@ -28,7 +28,7 @@ class Cart
                 'name' => $product->name,
                 'image' => $product->image,
                 'price' => $product->price,
-                'quantity' => 1,
+                'quantity' => $quantity,
             ];
             $this->cartItems[$product->id] = $item;
         }

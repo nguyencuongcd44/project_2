@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('product_id');
 
             // khóa ngoại
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('customers');
             $table->foreign('product_id')->references('id')->on('products');
             
             $table->timestamps();

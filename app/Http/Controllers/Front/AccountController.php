@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Front;
+use App\Http\Controllers\Controller;
 
 use App\Mail\VerifyAccount;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 // use Mail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use App\Http\Requests\AccountRegisterRequest;
 
 class AccountController extends Controller
 {
@@ -21,19 +25,20 @@ class AccountController extends Controller
             'email' => 'required|email|exists:customers',
             'password' => 'required',
         ]);
-
         $cus = Customer::where('email',  $request->email)->first();
-        if($cus){
-            if($cus->email_verified_at == null){
-                $data = $request->only('email', 'password');
-                $check = auth('cus')->attempt($data);
-                return redirect()->back()->with('error', 'Tài khoản chưa được xác minh , vui lòng kiểm tra mail.');
+
+        if($cus->email_verified_at == null){
+            return redirect()->back()->with('error', 'Tài khoản chưa được xác minh , vui lòng kiểm tra mail.');
+
+        }else{
+            $data = $request->only('email', 'password');
+            if(Auth::guard('cus')->attempt($data)){
+                return redirect()->intended('/')->with('success', 'Đăng nhập thành công.');
 
             }else{
-                return redirect()->intended('/')->with('success', 'Đăng nhập thành công.');
+                return redirect()->back()->with('error', 'Email hoặc mật khẩu không đúng.');
             }
         }
-        return redirect()->back()->with('error', 'Email hoặc mật khẩu không đúng.');
     }
 
     // register
@@ -41,37 +46,8 @@ class AccountController extends Controller
         return view('front.account.register');
     }
 
-    public function check_register(Request $request){
-
-        $request->validate([
-            'name' => 'required|min:6|max:100',
-            'phone' => 'required|regex:/^\+?[0-9]{9,13}$/|unique:customers',
-            'email' => 'required|email|min:6|max:100|unique:customers',
-            'password' => 'required|min:4',
-            'confimr_password' => 'required|same:password',
-
-        ], [
-            'name.required' => 'Tên không được để trống.',
-            'name.min' => 'Tên phải có ít nhất :min ký tự.',
-            'name.max' => 'Tên không được vượt quá :max ký tự.',
-
-            'phone.required' => 'Số điện thoại không được để trống.',
-            'phone.regex' => 'Số điện thoại không đúng định dạng. Vui lòng nhập số điện thoại hợp lệ.',
-            'phone.unique' => 'Số điện thoại đã tồn tại.',
-
-            'email.required' => 'Email không được để trống.',
-            'email.email' => 'Email không đúng định dạng.',
-            'email.min' => 'Email phải có ít nhất :min ký tự.',
-            'email.max' => 'Email không được vượt quá :max ký tự.',
-            'email.unique' => 'Email đã tồn tại.',
-
-            'password.required' => 'Mật khẩu không được để trống.',
-            'password.min' => 'Mật khẩu phải có ít nhất :min ký tự.',
-
-            'confimr_password.required' => 'Vui lòng xác nhận mật khẩu.',
-            'confimr_password.same' => 'Mật khẩu xác nhận không khớp với mật khẩu.',
-        ]);
-
+    public function check_register(AccountRegisterRequest $request){
+        $request->validated();
         $data = $request->only('name', 'email', 'phone', 'gender', 'address');
         $data['password'] = bcrypt($request->password);
  
@@ -129,6 +105,25 @@ class AccountController extends Controller
 
     public function check_reset_password(){
         
+    }
+
+
+    //Logout
+    public function logout(Request $request)
+    {
+        Auth::guard('cus')->logout();
+
+        // Xóa session hiện tại
+        $request->session()->invalidate();
+
+        // Tạo lại token để bảo vệ
+        $request->session()->regenerateToken();
+
+        // Lưu URL hiện tại trước khi đăng xuất
+        session(['url.intended' => $request->all()['url_intended']]);
+
+        // Chuyển hướng người dùng về trang trước đó hoặc về trang chủ
+        return redirect()->intended('/');
     }
     
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class SavePreviousUrl
+class SavePreviousUrl 
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class SavePreviousUrl
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::check()){
+        if(!Auth::guard('cus')->check()){
             // Lưu URL hiện tại vào session
             session(['url.intended' => url()->current()]);
         }

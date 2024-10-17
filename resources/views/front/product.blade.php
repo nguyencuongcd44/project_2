@@ -64,7 +64,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @if (Auth::check())
+                    @if (Auth::guard('cus')->check())
                         <h3>Để lại bình luận của bạn</h3>
                         <form method="post" action="{{ route('front.post_cmt', $product->id) }}" role="form">
                             @csrf
@@ -77,7 +77,7 @@
                     @else
                         <div class="alert alert-danger">
                             <strong>Đăng nhập để bình luận</strong> 
-                            <a href="{{ route('login') }}" class="btn btn-primary">Đăng Nhập</a>
+                            <a href="{{ route('account.login') }}" class="btn btn-primary">Đăng Nhập</a>
                         </div>
                     @endif
 
@@ -89,11 +89,12 @@
                         @foreach ($comments as $comment)
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4>{{ $comment->user->name }} <small class="text-muted">{{ $comment->created_at->format('Y/m/d') }}</small></h4>
+                                    <h4>{{ $comment->customer->name }} <small class="text-muted">{{ $comment->created_at->format('Y/m/d') }}</small></h4>
                                 </div>
                                 <div class="panel-body">
                                     <p>{{ $comment->text }}</p>
                                 </div>
+
                                 @can('my-comment', $comment)
                                     <div class="panel-footer text-right">
                                         <button class="btn btn-primary btn-sm">Edit</button>
@@ -113,8 +114,5 @@
         <a href="{{ route('home.index') }}" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
     </div>
 </div>
-
-
-
 
 @stop

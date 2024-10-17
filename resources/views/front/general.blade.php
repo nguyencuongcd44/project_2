@@ -83,6 +83,8 @@
                     </li>
                 </ul>
     
+                
+                <strong style="color: aliceblue"><? var_dump(session('url.intended')); ?></strong>
                 <!-- Phần này căn phải -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Cart Icon -->
@@ -96,13 +98,13 @@
                     </li>
     
                     <!-- Kiểm tra người dùng đã đăng nhập hay chưa -->
-                    @if (Auth::check())
+                    @if (Auth::guard('cus')->check())
                         <!-- Hiển thị tên người dùng và nút đăng xuất -->
                         <li>
-                            <strong class="navbar-text" style="color: #fff;">{{ Auth::User()->name }}</strong>
+                            <strong class="navbar-text" style="color: #fff;">{{ Auth::guard('cus')->user()->name }}</strong>
                         </li>
                         <li>
-                            <form action="{{ route('logout', ['url.intended' => url()->current()]) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('account.logout', ['url.intended' => url()->current()]) }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-danger navbar-btn">Đăng xuất</button>
                             </form>
@@ -110,7 +112,7 @@
                     @else
                         <!-- Hiển thị nút đăng nhập nếu chưa đăng nhập -->
                         <li>
-                            <a href="{{ route('login') }}" class="btn btn-primary navbar-btn">Đăng Nhập</a>
+                            <a href="{{ route('account.login') }}" class="btn btn-primary navbar-btn">Đăng Nhập</a>
                         </li>
                     @endif
                 </ul>
@@ -130,6 +132,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Phần Thông Báo Lỗi -->
+        @include('front.alerts')
     
         <div class="container">
             @yield('main')

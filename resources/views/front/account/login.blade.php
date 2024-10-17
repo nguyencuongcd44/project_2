@@ -9,7 +9,7 @@
                     <h3 class="panel-title text-center">Đăng Nhập</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ route('check_login') }}" method="POST" role="form">
+                    <form action="{{ route('account_check_login') }}" method="POST" role="form">
                         @csrf
                         @if($errors->any())
                             <div>
@@ -43,7 +43,7 @@
                         <a href="">Quên mật khẩu?</a>
                     </p>
                     <p class="text-center">
-                        <a href="" class="btn btn-link">Chưa có tài khoản? Đăng ký ngay</a>
+                        <a href="{{ route('account.register') }}" class="btn btn-link">Chưa có tài khoản? Đăng ký ngay</a>
                     </p>
                 </div>
             </div>

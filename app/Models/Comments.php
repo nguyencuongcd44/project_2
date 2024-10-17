@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,14 +11,12 @@ class Comments extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id', 
         'text', 
         'product_id',
         'user_id',
-        'created_at'
     ];
 
-    public function user(){
-        return $this->hasOne(User::class, 'id','user_id');
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'user_id','id');
     }
 }

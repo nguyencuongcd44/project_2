@@ -17,6 +17,9 @@ class Customer extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 'customers';
+
     protected $fillable = [
         'name',
         'email',
@@ -24,6 +27,7 @@ class Customer extends Authenticatable
         'address',
         'gender',
         'password',
+        'email_verified_at',
     ];
 
     /**
@@ -45,4 +49,10 @@ class Customer extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function comments()
+    {
+        return $this->hasMany(Comments::class, 'user_id', 'id');
+    }
 }
