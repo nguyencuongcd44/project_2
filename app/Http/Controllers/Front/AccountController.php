@@ -11,25 +11,30 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\AccountRegisterRequest;
+use App\Http\Requests\AccountLoginRequest;
 
 class AccountController extends Controller
 {
 
     // login
     public function login(){
+        if(Auth::guard('cus')->check()){
+            return redirect()->back();
+        }
         return view('front.account.login');
     }
 
-    public function check_login(Request $request){
-        $request->validate([
-            'email' => 'required|email|exists:customers',
-            'password' => 'required',
-        ]);
+    public function check_login(AccountLoginRequest $request){
+        if(Auth::guard('cus')->check()){
+            return redirect()->back();
+        }
+        
+        $request->validated();
+
         $cus = Customer::where('email',  $request->email)->first();
 
         if($cus->email_verified_at == null){
             return redirect()->back()->with('error', 'Tài khoản chưa được xác minh , vui lòng kiểm tra mail.');
-
         }else{
             $data = $request->only('email', 'password');
             if(Auth::guard('cus')->attempt($data)){
@@ -64,7 +69,7 @@ class AccountController extends Controller
 
     // xác nhận
     public function verify($email){
-        $acc = Customer::where(['email'=> $email, 'email_verified_at'=> null])->firstOrFail();
+        // $acc = Customer::where(['email'=> $email, 'email_verified_at'=> null])->firstOrFail();
         Customer::where('email', $email)->update(['email_verified_at' => date('Y-m-d')]);
 
         return redirect(route('account.login'))->with('success', 'Xác nhận thành công. Bạn có thể đăng nhập');

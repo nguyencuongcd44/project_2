@@ -12,7 +12,7 @@ use Illuminate\Support\MessageBag;
 class AdminController extends Controller
 {
 
-    // Register
+    // index
     public function index()
     {
         return view('admin/index');
@@ -49,19 +49,17 @@ class AdminController extends Controller
     public function check_login()
     {
         request()->validate([
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
-        $data = request()->all('email', 'password');
+        $data = request()->only('email', 'password');
 
         // nếu thông tin đăng nhập đúng -> đăng nhập thành công
         if (Auth::attempt($data)) {
-            return redirect()->route('admin.login');
+            return redirect()->route('admin.index');
         }
         // nếu thông tin đăng nhập sai sẽ back cùng với lỗi
-        $errors  = new MessageBag;
-        $errors->add('custom_error', 'Email or password was incorrect'); // hiện tại vẫn chưa hiển thị được lỗi 
-        return redirect()->back()->withErrors($errors);
+        return redirect()->back()->withErrors('error', 'Email or password was incorrect');
         
     }
 

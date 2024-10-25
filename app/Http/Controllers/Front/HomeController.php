@@ -34,14 +34,16 @@ class HomeController extends Controller
     public function detail(Product $product)
     {
         $comments = Comments::where('product_id', $product->id)->orderBy('id', 'DESC')->get();
-
-        return view('front.product', compact('product', 'comments'));
+        return view('front.product')->with(['product' => $product, 'comments' => $comments]);
+        
     }
 
     public function post_cmt(Request $request, $product)
     {
         $request->validate([
             'comment' => 'required',
+        ],[
+            'comment.required' => 'Nội dung bình luận không được để trống.',
         ]);
         $data['user_id'] = Auth::guard('cus')->user()->id;
         $data['product_id'] = $product;

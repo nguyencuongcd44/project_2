@@ -9,15 +9,8 @@
                     <h3 class="panel-title text-center">Đăng Nhập</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ route('account_check_login') }}" method="POST" role="form">
+                    <form action="{{ route('account.check_login') }}" method="POST" role="form">
                         @csrf
-                        @if($errors->any())
-                            <div>
-                                @foreach ($errors->all() as $error)
-                                    <p class="text-danger">{{ $error }}</p>
-                                @endforeach
-                            </div>
-                        @endif
                         <div class="form-group">
                             <label for="email">Địa chỉ Email:</label>
                             <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>

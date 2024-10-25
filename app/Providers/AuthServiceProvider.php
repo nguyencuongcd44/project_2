@@ -24,8 +24,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerPolicies();
+
         Gate::define('my-comment', function (Customer $customer, Comments $comment) {
-            // Kiểm tra nếu id của người dùng trong comment trùng với id của khách hàng đăng nhập
             return $comment->user_id == $customer->id;
         });
     }

@@ -59,7 +59,7 @@ Route::middleware('savePreUrl')->group(function () {
         //login
         Route::get('/login', [AccountController::class, 'login'])->name('account.login');
         Route::get('/verify-account/{email}', [AccountController::class, 'verify'])->name('account.verify');
-        Route::post('/login', [AccountController::class, 'check_login'])->name('account_check_login');
+        Route::post('/login', [AccountController::class, 'check_login'])->name('account.check_login');
 
         //register
         Route::get('/register', [AccountController::class, 'register'])->name('account.register');
@@ -102,7 +102,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminController::class, 'check_login'])->name('admin.check_login');
 
     // Auth
-    Route::middleware('auth', 'role:admin,editor')->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
         Route::resources([
             'category' => CategoryController::class,

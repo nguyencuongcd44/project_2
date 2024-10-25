@@ -21,7 +21,7 @@ class CartController extends Controller
         $quantity = request('quantity', 1);
         $cart->add($product, $quantity);
 
-        return back();
+        return back()->with('success', 'Thêm sản phẩm thành công.');
     }
 
     public function update($id, Cart $cart) 
@@ -29,7 +29,7 @@ class CartController extends Controller
         $quantity = request('quantity');
         $cart->update($id, $quantity);
 
-        return redirect(route('cart'));
+        return redirect(route('cart'))->with('success', 'Update sản phẩm thành công.');
     }
 
     
@@ -37,13 +37,13 @@ class CartController extends Controller
     {
         $cart->delete($id);
 
-        return redirect(route('cart'));
+        return redirect(route('cart'))->with('success', 'Xóa sản phẩm thành công.');
     }
 
     public function clear(Cart $cart) 
     {
         $cart->clear();
 
-        return redirect(route('cart'));
+        return redirect(route('cart'))->with('success', 'Xóa giỏ hàng thành công.');
     }
 }

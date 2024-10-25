@@ -68,9 +68,6 @@
                         <h3>Để lại bình luận của bạn</h3>
                         <form method="post" action="{{ route('front.post_cmt', $product->id) }}" role="form">
                             @csrf
-                            @if ($errors -> has('comment'))
-                                <small class="text-danger">{{ $errors->first('comment')}}</small>
-                            @endif
                             <textarea name="comment" id="comment" rows="4" style="width: 100%; padding: 10px;" class="form-control" placeholder="Viết bình luận của bạn..."></textarea>
                             <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Gửi bình luận</button> <!-- Cách ra nút gửi bình luận -->
                         </form>
@@ -86,6 +83,7 @@
                         <h3>Chưa có bình luận nào.</h3>
                     @else
                         <hr>
+                        
                         @foreach ($comments as $comment)
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -94,13 +92,14 @@
                                 <div class="panel-body">
                                     <p>{{ $comment->text }}</p>
                                 </div>
-
-                                @can('my-comment', $comment)
-                                    <div class="panel-footer text-right">
-                                        <button class="btn btn-primary btn-sm">Edit</button>
-                                        <button class="btn btn-danger btn-sm">Delete</button>
-                                    </div>
-                                @endcan
+                                @auth('cus')
+                                    @if(auth()->guard('cus')->user()->can('my-comment', $comment))
+                                        <div class="panel-footer text-right">
+                                            <button class="btn btn-primary btn-sm">Edit</button>
+                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                        </div>
+                                    @endcan
+                                @endauth
                             </div>
                         @endforeach
                     @endif

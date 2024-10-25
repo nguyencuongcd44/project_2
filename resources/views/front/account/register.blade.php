@@ -6,13 +6,6 @@
     <hr>
     <form action="{{ route('account.register') }}" method="POST" class="form-horizontal">
         @csrf
-        @if($errors->any())
-            <div>
-                @foreach ($errors->all() as $error)
-                    <p class="text-danger">{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
         <!-- Tên -->
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">Tên</label>

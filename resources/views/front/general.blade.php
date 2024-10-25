@@ -10,9 +10,11 @@
         <!-- Bootstrap CSS -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         
-
-        {{-- Font Awesome --}}
+        <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/a34c25a309.js" crossorigin="anonymous"></script>
+
+        <!-- sweetalert -->
+        <script src="/Js/sweetalert2@11.js"></script>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -78,13 +80,8 @@
                     <li class="active">
                         <a href="/">Home</a>
                     </li>
-                    <li>
-                        <a href="">Category</a>
-                    </li>
                 </ul>
-    
                 
-                <strong style="color: aliceblue"><? var_dump(session('url.intended')); ?></strong>
                 <!-- Phần này căn phải -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Cart Icon -->
