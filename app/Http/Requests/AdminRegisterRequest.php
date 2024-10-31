@@ -2,10 +2,26 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminRegisterRequest extends FormRequest
 {
+    /**
+     * Override phương thức failedValidation để chuyển lỗi vào error bag tùy chỉnh.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator, 'adminErrors') // Chuyển lỗi vào error bag tùy chỉnh 'adminErrors'
+                ->withInput()
+        );
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */

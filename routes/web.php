@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\AccountController;
+use App\Http\Controllers\Front\CommentController;
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -22,35 +23,24 @@ use App\Http\Controllers\Admin\AdminController;
 
 //Front Group routes----------------------------------------------------------------------------------------------------------------------------------------
 Route::middleware('savePreUrl')->group(function () {
-    //home
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-
-    //category
     Route::get('/category/{category}', [HomeController::class, 'category'])->name('front.category');
-
-    //product
     Route::get('/product/{product}', [HomeController::class, 'detail'])->name('front.product');
-
-    //post product comment
-    Route::post('/comment/{product}', [HomeController::class, 'post_cmt'])->name('front.post_cmt');
-    
 
     // Cart routes
     Route::prefix('cart')->group(function () {
-        //cart
         Route::get('/', [CartController::class, 'cart'])->name('cart');
-
-        //add to cart
         Route::get('/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
-
-        //update
         Route::get('/update/{product}', [CartController::class, 'update'])->name('cart.update');
-
-        //delete
         Route::get('/delete/{id}', [CartController::class, 'delete'])->name('cart.delete');
-
-        //clear
         Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
+    });
+
+    // Comment routes 
+    Route::prefix('comment')->middleware('customer')->group(function () {
+        Route::post('/post/{product}', [CommentController::class, 'post_cmt'])->name('front.post_cmt');
+        Route::put('/update', [CommentController::class, 'update_cmt'])->name('front.update_cmt');
+        Route::get('/delete/{id}', [CommentController::class, 'delete_cmt'])->name('front.delete_cmt');
     });
 
     
@@ -88,7 +78,6 @@ Route::middleware('savePreUrl')->group(function () {
         });
     });
 });
-
 
 
 // Admin Group Routes -------------------------------------------------------------------------------------------------------------------------------

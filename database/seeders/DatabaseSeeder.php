@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,   // Seed dữ liệu cho bảng users
+            CustomerSeeder::class,   // Seed dữ liệu cho bảng Customer
             CategorySeeder::class,  // Seed dữ liệu cho bảng categories
             ProductSeeder::class,   // Seed dữ liệu cho bảng products
             CommentSeeder::class,   // Seed dữ liệu cho bảng comments

@@ -25,11 +25,10 @@
             <td>{{ $cat->status == 0 ? 'Tạm Ẩn' : 'Hiển Thị'}}</td>
 
             <td>
-                
-                <form action="{{ route('category.destroy', $cat->id) }}" method="POST" role="form">
+                <form id="deleteForm{{$cat->id}}" action="{{ route('category.destroy', $cat->id) }}" method="POST" role="form">
                     @csrf @method('DELETE')
                     <a href="{{ route('category.edit', $cat->id) }}" class="btn btn-sm btn-primary">Sửa</a>
-                    <button class="btn btn-sm btn-danger">Xóa</button>
+                    <button type="submit" onclick="formDeleteConfirm('{{ $cat->id }}')" class="btn btn-sm btn-danger">Xóa</button>
                 </form>
             </td>
         </tr>

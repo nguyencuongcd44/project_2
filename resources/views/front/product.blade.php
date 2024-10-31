@@ -90,13 +90,13 @@
                                     <h4>{{ $comment->customer->name }} <small class="text-muted">{{ $comment->created_at->format('Y/m/d') }}</small></h4>
                                 </div>
                                 <div class="panel-body">
-                                    <p>{{ $comment->text }}</p>
+                                    <p id="commentText{{$comment->id}}">{!! nl2br($comment->text) !!}</p>
                                 </div>
                                 @auth('cus')
                                     @if(auth()->guard('cus')->user()->can('my-comment', $comment))
                                         <div class="panel-footer text-right">
-                                            <button class="btn btn-primary btn-sm">Edit</button>
-                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                            <button onclick="updateComment('{{ route('front.update_cmt', $comment->id) }}', '{{ $comment->id }}')" class="btn btn-primary btn-sm">Edit</button>
+                                            <button onclick="deleteConfirm('{{ route('front.delete_cmt', $comment->id) }}')" class="btn btn-danger btn-sm">Delete</button>
                                         </div>
                                     @endcan
                                 @endauth

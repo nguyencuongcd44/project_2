@@ -7,14 +7,23 @@ use App\Models\Product;
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductStoreRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    protected function deleteFolder($folderPath){
+        if(file_exists($folderPath)){
+            File::deleteDirectory(public_path($folderPath));
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,47 +47,71 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $request->validate([
-            'img_upload'     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'name'          => 'required|unique:products',
-            'contents'      => 'required',
-            'price'         => 'required|numeric|digits_between:1,8',
-            'category_id'   => 'required',
-            'status'        => 'required'
-        ]);
+        $validated = $request->validated();
+        $pro_number = $validated['pro_number'];
+        $folder_path = public_path('product_img/').$pro_number;
+        $imgs_name = ''; 
 
-        $image_name = ''; //khởi tạo biến chứa tên ảnh
+        DB::beginTransaction();
         try {
-            //kiểm tra sự hiện diện của ảnh mới
-            if($request->hasFile('img_upload')){
-                // tạo tên ảnh
-                $image = $request->all()['img_upload'];
-                $carbon = Carbon::now();
-                $image_name = $carbon->format('YmdHis').'_'.$image->getClientOriginalName();
-
-                //Lưu ảnh mới
-                if($image->move(public_path('images'), $image_name)){
-                    $request->merge(['image' => $image_name]);
-                    Product::create(request()->all());
-
-                }
+            // tạo folder
+            if(!file_exists($folder_path)){
+                File::makeDirectory($folder_path, 0777, true);
             }
 
+            // thumbnail
+            if($validated['thumbnail_upload']){
+                $thumbnail = $validated['thumbnail_upload'];
+                $ext = $thumbnail->getClientOriginalExtension();
+                $thumbnail_name = $pro_number.'.'.$ext;
+                $thumbnail->move($folder_path, $thumbnail_name);
+                $validated['thumbnail'] = $thumbnail_name;
+            }
+
+            // images
+            if($validated['img_upload']){
+                $imgs = $validated['img_upload'];
+
+                $cnt= 1;
+                foreach($imgs as $img){
+                    $ext = $img->getClientOriginalExtension();
+                    $img_name = $pro_number.'_'.$cnt.'.'.$ext;
+                    $img->move($folder_path, $img_name);
+                    $imgs_name .= $img_name.'|->';
+                    $cnt ++;
+                }
+                $validated['image'] = $imgs_name;
+            }
+            
+            Product::create($validated);
             DB::commit();
 
-            return redirect()->route('product.index');
+            return redirect()->route('product.index')->with('admin_success', 'Tạo sản phẩm thành công.');
+
+        } catch (QueryException $e) {
+            // Xóa ảnh mới nếu có lỗi xảy ra
+            $this->deleteFolder($folder_path);
+            
+            Log::error('Lỗi truy vấn: ', [
+                'error_message' => $e->getMessage(),
+                'inputs' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->with('admin_error', 'Đã xảy ra lỗi.');
 
         } catch (\Exception $e) {
-            DB::rollBack();
-
             // Xóa ảnh mới nếu có lỗi xảy ra
-            if (File::exists(public_path('/images/'.$image_name))) {
-                File::delete(public_path('/images/'.$image_name));
-            }
+            $this->deleteFolder($folder_path);
+            
+            Log::error('Lỗi không xác định: ', [
+                'error_message' => $e->getMessage(),
+                'inputs' => $e->getTraceAsString(),
+            ]);
 
-            return back()->withErrors('Creating failed');
+            return redirect()->back()->with('admin_error', 'Đã xảy ra lỗi.');
+
         }
     }
 
@@ -170,7 +203,9 @@ class ProductController extends Controller
         if (File::exists(public_path('/images/'.$product->image))) {
             File::delete(public_path('/images/'.$product->image));
         }
-        $product->delete();
-        return redirect()->route('product.index');
+        if($product->delete()){
+            return redirect()->route('product.index')->with('admin_success', 'Xóa sản phẩm thành công.');
+        }
+        return redirect()->route('product.index')->with('admin_error', 'Xóa sản phẩm thất bại.');
     }
 }

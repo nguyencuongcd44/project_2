@@ -16,7 +16,7 @@
         <tr>
             <th>ID</th>
             <th>Tên</th>
-            <th>Ảnh</th>
+            <th>Thumbnail</th>
             <th>Giá (vnd)</th>
             <th>Miêu tả</th>
             <th>Danh mục</th>
@@ -46,10 +46,10 @@
             <td>{{ $product->status == 0 ? 'Tạm Ẩn' : 'Hiển Thị'}}</td>
 
             <td>
-                <form action="{{ route('product.destroy', $product->id) }}" method="POST" role="form">
+                <form id="deleteForm{{$product->id}}" action="{{ route('product.destroy', $product->id) }}" method="POST" role="form">
                     @csrf @method('DELETE')
                     <a href="{{ route('product.edit', $product->id) }}" class="btn btn-sm btn-primary">Sửa</a>
-                    <button class="btn btn-sm btn-danger">Xóa</button>
+                    <button onclick="formDeleteConfirm('{{ $product->id }}')" class="btn btn-sm btn-danger">Xóa</button>
                 </form>
             </td>
         </tr>

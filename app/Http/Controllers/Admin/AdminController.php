@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use App\Http\Requests\AdminRegisterRequest;
+use App\Http\Requests\AdminLoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
@@ -46,20 +46,18 @@ class AdminController extends Controller
         }
     }
 
-    public function check_login()
+    public function check_login(AdminLoginRequest $request)
     {
-        request()->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-        $data = request()->only('email', 'password');
-
-        // nếu thông tin đăng nhập đúng -> đăng nhập thành công
-        if (Auth::attempt($data)) {
-            return redirect()->route('admin.index');
+        if(Auth::check()){
+            return redirect()->back()->with('admin_error', 'Bạn đang đăng nhập.');
         }
-        // nếu thông tin đăng nhập sai sẽ back cùng với lỗi
-        return redirect()->back()->withErrors('error', 'Email or password was incorrect');
+        $request->validated();
+        $data = $request->only('email', 'password');
+
+        if (Auth::attempt($data)) {
+            return redirect()->route('admin.index')->with('admin_success', 'Đăng nhập thành công.');
+        }
+        return redirect()->back()->with('admin_error', 'Email hoặc mật khẩu không đúng.');
         
     }
 

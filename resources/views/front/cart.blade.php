@@ -93,7 +93,7 @@
         
                         <!-- Nút Remove -->
                         <td style="width: 10%;">
-                            <a onclick="deleteConfirm('{{ route('cart.delete', $item->id) }}')" href="{{ route('cart.delete', $item->id) }}" class="btn btn-danger btn-sm">Xóa</a>
+                            <button onclick="deleteConfirm('{{ route('cart.delete', $item->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
                         </td>
                     </tr>
                 @endforeach
@@ -105,7 +105,7 @@
             <div class="col-md-6 col-sm-12">
                 <div class="cart-buttons">
                     <a href="{{ route('home.index') }}" class="btn btn-primary">Quay lại mua sắm</a>
-                    <a href="{{ route('cart.clear') }}" onclick="deleteConfirm('{{ route('cart.clear') }}')" class="btn btn-danger">Xóa giỏ hàng</a>
+                    <button onclick="deleteConfirm('{{ route('cart.clear') }}')" class="btn btn-danger">Xóa giỏ hàng</button>
                 </div>
             </div>
             <div class="col-md-6 col-sm-12 text-right">

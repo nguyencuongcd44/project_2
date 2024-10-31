@@ -9,20 +9,19 @@
         <!-- Bootstrap CSS -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- jQuery -->
         <script type="text/javascript" src="\Js\jquery-3.7.1.min.js"></script>
         <!-- Bootstrap JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <script src="https://kit.fontawesome.com/a34c25a309.js" crossorigin="anonymous"></script>
+        <script src="/Js/sweetalert2@11.js"></script>
+        <script src="/Js/customize.js"></script>
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
     </head>
     <body>
+         <!-- Phần Thông Báo Lỗi -->
+        @include('admin.alerts')
+
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
@@ -33,13 +32,6 @@
                         <div class="panel-body">
                             <form action="{{ route('admin.check_login') }}" method="POST" role="form">
                                 @csrf
-                                @if($errors->any())
-                                    <div>
-                                        @foreach ($errors->all() as $error)
-                                            <p class="text-danger">{{ $error }}</p>
-                                        @endforeach
-                                    </div>
-                                @endif
                                 <div class="form-group">
                                     <label for="email">Địa chỉ Email:</label>
                                     <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>

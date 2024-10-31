@@ -9,7 +9,6 @@
         <div class="form-group">
             <label for="">Name</label>
             <input type="text" class="form-control" name="name" placeholder="Input Name">
-            @error('name') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
         <div class="form-group">

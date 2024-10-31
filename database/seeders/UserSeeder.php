@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         for ($i = 1; $i <= 3; $i++) {
             DB::table('users')->insert([
                 'name' => 'User ' . $i,
-                'email' => 'user' . $i . '@example.com',
+                'email' => 'user' . $i . '@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => $i % 2 == 0 ? 'admin' : 'user', // Gán vai trò: admin hoặc user
                 'created_at' => now(),

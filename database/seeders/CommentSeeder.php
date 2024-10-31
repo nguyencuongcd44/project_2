@@ -17,7 +17,7 @@ class CommentSeeder extends Seeder
         for ($i = 1; $i <= 50; $i++) {
             DB::table('comments')->insert([
                 'text' => 'This is a comment number ' . $i,
-                'user_id' => rand(1, 3), // Giả lập ID người dùng (giả định bảng users có 10 bản ghi)
+                'customer_id' => rand(1, 3), // Giả lập ID người dùng (giả định bảng users có 10 bản ghi)
                 'product_id' => rand(1, 50), // Giả lập ID sản phẩm (giả định bảng products có 50 bản ghi)
                 'created_at' => now(),
                 'updated_at' => now(),

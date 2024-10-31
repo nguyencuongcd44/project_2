@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Validation\Validator;
 
 class CategoryController extends Controller
 {
@@ -32,11 +33,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
-            'name' => 'required|unique:categories',
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|unique:categories,name,',
+        ], [
+            'name.required' => 'Tên danh mục không được để trống.',
+            'name.unique' => 'Tên danh mục đã tồn tại.',
         ]);
-        Category::create(request()->all());
-        return redirect()->route('category.index');
+    
+        // Kiểm tra lỗi và chuyển lỗi vào error bag 'adminErrors' nếu có
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator, 'adminErrors')
+                ->withInput();
+        }
+        if(Category::create(request()->all())){
+            return redirect()->route('category.index')->with('admin_success', 'Tạo danh mục thành công.');
+        }
+        return redirect()->route('category.index')->with('admin_error', 'Tạo danh mục thất bại.');
+
     }
 
     /**
@@ -60,11 +74,25 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        request()->validate([
-            'name' => 'required|unique:categories,name,'.$category->id // cách này cũng có thể loại trừ tên category hiện tại (tránh trường hợp báo lỗi đã tồn tại giống product)
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|unique:categories,name,' . $category->id,
+        ], [
+            'name.required' => 'Tên danh mục không được để trống.',
+            'name.unique' => 'Tên danh mục đã tồn tại.',
         ]);
-        $category->update(request()->all());
-        return redirect()->route('category.index');
+    
+        // Kiểm tra lỗi và chuyển lỗi vào error bag 'adminErrors' nếu có
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator, 'adminErrors')
+                ->withInput();
+        }
+
+        if($category->update(request()->all())){
+            return redirect()->route('category.index')->with('admin_success', 'Cập nhật danh mục thành công.');
+        }
+        return redirect()->route('category.index')->with('admin_error', 'Cập nhật danh mục thất bại.');
+
     }
 
     /**
@@ -72,7 +100,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category->delete();
-        return redirect()->route('category.index');
+        if($category->delete()){
+            return redirect()->route('category.index')->with('admin_success', 'Xóa danh mục thành công.');
+        }
+        return redirect()->route('category.index')->with('admin_error', 'Xóa danh mục thất bại.');
     }
 }
