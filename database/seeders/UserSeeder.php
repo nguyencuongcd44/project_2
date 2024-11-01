@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => 'User ' . $i,
                 'email' => 'user' . $i . '@gmail.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('1111'),
                 'role' => $i % 2 == 0 ? 'admin' : 'user', // Gán vai trò: admin hoặc user
                 'created_at' => now(),
                 'updated_at' => now(),

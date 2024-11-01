@@ -8,6 +8,7 @@ use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
@@ -95,6 +96,8 @@ class ProductController extends Controller
             $this->deleteFolder($folder_path);
             
             Log::error('Lỗi truy vấn: ', [
+                'action' => request()->route()->getActionName(),
+                'line' => $e->getLine(),
                 'error_message' => $e->getMessage(),
                 'inputs' => $e->getTraceAsString(),
             ]);
@@ -106,6 +109,8 @@ class ProductController extends Controller
             $this->deleteFolder($folder_path);
             
             Log::error('Lỗi không xác định: ', [
+                'action' => request()->route()->getActionName(),
+                'line' => $e->getLine(),
                 'error_message' => $e->getMessage(),
                 'inputs' => $e->getTraceAsString(),
             ]);
@@ -129,69 +134,177 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $cats = Category::orderBy('name', 'ASC')->get();
-        return view('admin.product.edit', compact(['product', 'cats']));
+        $imgs = [];
+        if($product->image){
+            $imgs = explode('|->', $product->image);
+            $imgs = array_filter($imgs);
+        }
+        return view('admin.product.edit', compact(['product', 'imgs', 'cats']));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
+        $MAX_IMAGES = 6;
+        $MAX_SIZE_MB = 1; // Dung lượng tối đa mỗi ảnh (MB)
+
+        $post = $request->all();
+        $post['image'] = '';
+        $imgs = explode('|->', $post['sort']);
+        $imgs = array_filter($imgs);
+        $pro_number = $post['pro_number'];
+        $folder_path = public_path('product_img/').$pro_number;
         
-        // validate dữ liệu (tên sản phẩm bắt buộc và duy nhất loại trừ tên sản phẩm hiện tại)
-        $request->validate([
-            'name' => [
-                'required',
-                'string',
-                Rule::unique('products')->ignore($product->id),
-            ],
-            'img_upload'=> 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'price'     => 'required|numeric|digits_between:1,8', 
-            'contents'  => 'required',
-        ]);
+        //check số lượng ảnh
+        if(count($imgs) > $MAX_IMAGES){
+            Log::error('Client:Upload quá '. $MAX_IMAGES.' ảnh.', [
+                'action' => request()->route()->getActionName(),
+            ]);
+            return redirect()->back()->with('admin_error', 'Bạn chỉ được tải lên tối đa '. $MAX_IMAGES.' ảnh.');
+        }
+
+        //check dung lượng mỗi ảnh
+        if(isset($post['new_images'])){
+
+            $over_flg = 0;
+            foreach($post['new_images'] as $new_image){
+                if($new_image->getSize() > $MAX_SIZE_MB * 1024 * 1024){
+                    $over_flg = 1;
+                }
+            }
+            if($over_flg == 1){
+                Log::error('Client:Upload ảnh quá '. $MAX_SIZE_MB.' MB.', [
+                    'action' => request()->route()->getActionName(),
+                ]);
+                return redirect()->back()->with('admin_error', 'Dung lượng mỗi ảnh chi tiết không được vượt quá '. $MAX_SIZE_MB.' MB.');
+            }
+
+            // Lấy danh sách ảnh chi tiết mới 
+            $newImages = $request->file('new_images');
+
+            // Tạo một mảng kết hợp để dễ dàng truy cập vào các file ảnh mới dựa trên tên file của chúng
+            $newImagesMap = [];
+            foreach ($newImages as $file) {
+                $newImagesMap[$file->getClientOriginalName()] = $file;
+            }
+           
+        }
+
+        $new_folder_path = public_path('product_img/').'__'.$pro_number;
+        // tạo folder
+        if(!file_exists($folder_path)){
+            File::makeDirectory(public_path('product_img/').'__'.$pro_number, 0777, true);
+
+        }else{
+            File::copyDirectory($folder_path, $new_folder_path);
+            chmod($new_folder_path, 0777); 
+        }
         
-        //cách xử lý update ảnh dưới đây hơi cồng kềnh, nên tham khảo cách update ảnh khác ?
         DB::beginTransaction();
-
-        $old_image = ''; //khởi tạo biến chứa tên ảnh cũ
-        $image_name = ''; //khởi tạo biến chứa tên ảnh mới
         try {
-            //kiểm tra sự hiện diện của ảnh mới
-            if($request->hasFile('img_upload')){
-                // tạo tên ảnh
-                $image = $request->all()['img_upload'];
-                $carbon = Carbon::now();
-                $image_name = $carbon->format('YmdHis').'_'.$image->getClientOriginalName();
+            // thumbnail
+            if(isset($post['thumbnail'])){
+                // xóa thumbnail cũ 
+                $oldThumbnail = File::glob($new_folder_path . '/' . $pro_number . '.*');
 
-                //Lưu ảnh mới
-                if($image->move(public_path('images'), $image_name)){
-                    $old_image = $product->image;
-                    $request->merge(['image' => $image_name]);
+                if (count($oldThumbnail) > 0) {
+                    unlink($oldThumbnail[0]);
+                }
+                
+                // thêm thumbnail mới
+                $newThumbnail = $post['thumbnail'];
+                $newThumbnailExt = $newThumbnail->getClientOriginalExtension();
+                $newThumbnail->move($new_folder_path, $pro_number.'.'.$newThumbnailExt);
+                $post['thumbnail'] = $pro_number.'.'.$newThumbnailExt;
+            }
+
+            $sort = 1;
+            foreach($imgs as $img){
+                // có ảnh cũ
+                if(File::exists($new_folder_path.'/'.$img)){
+                    $parts = explode('.', $img);
+                    $oldImageExt = end($parts);
+                    $newImagePath = $new_folder_path.'/'.'__'.$pro_number.'_'.$sort.'.'.$oldImageExt;
+                    copy($new_folder_path.'/'.$img, $newImagePath);
+                    $sort ++ ;
+
+                }else if(!File::exists($new_folder_path.'/'.$img) && isset($newImagesMap[$img])){ 
+                    // khi là ảnh mới
+                    $parts = explode('.', $img);
+                    $newImageExt = end($parts);
+                    $newImage = $newImagesMap[$img];
+                    $newImage->move($new_folder_path, '__'.$pro_number.'_'.$sort.'.'.$newImageExt);
+                    $sort ++ ;
                 }
             }
 
-            //Update dữ liệu
-            $product->update(request()->all());
+            // xóa các ảnh cũ 
+            $oldImages = File::glob($new_folder_path . '/' . $pro_number . '_*');
+            if(count($oldImages) > 0){
+                foreach ($oldImages as $file) {
+                    unlink($file);
+                }
+            }
+
+            // sửa tên ảnh đã thêm ban trên thành tên đúng : từ "__ten_anh.png"  thành "ten_anh.png"
+            $files = File::glob($new_folder_path . '/' . '__' . $pro_number . '_*');
+            foreach ($files as $file) {
+                $explode = explode('/', $file);
+                $imageName = end($explode);
+
+                // Tên file mới sẽ bỏ "__" ở đầu
+                $newFilename = substr($imageName, 2); // Bỏ "__" và giữ phần còn lại
+                
+                // Đổi tên file
+                rename($new_folder_path . '/' . $imageName, $new_folder_path . '/' . $newFilename);
+                $post['image'] .= $newFilename.'|->';
+            }
+
+            //Update dữ liệu DB
+            $product->update($post);
 
             DB::commit();
 
+            // xóa folder cũ , đổi tên folder mới
+            File::deleteDirectory($folder_path);
+
+            $permissions = fileperms($new_folder_path);
+            $permissions = substr(sprintf('%o', $permissions), -3);
+        
+            rename($new_folder_path, $folder_path);
+            chmod($folder_path, 0777); 
+
+            return redirect()->route('product.index')->with('admin_success', 'Cập nhật sản phẩm thành công.');
+
+        } catch (QueryException $e) {
+
+            $this->deleteFolder($new_folder_path);
+            
+            Log::error('Lỗi truy vấn: ', [
+                'action' => request()->route()->getActionName(),
+                'line' => $e->getLine(),
+                'error_message' => $e->getMessage(),
+                'inputs' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->with('admin_error', 'Đã xảy ra lỗi.');
+
         } catch (\Exception $e) {
-            DB::rollBack();
 
-            // Xóa ảnh mới nếu có lỗi xảy ra
-            if (File::exists(public_path('/images/'.$image_name))) {
-                File::delete(public_path('/images/'.$image_name));
-            }
+            $this->deleteFolder($new_folder_path);
+            
+            Log::error('Lỗi không xác định: ', [
+                'action' => request()->route()->getActionName(),
+                'line' => $e->getLine(),
+                'error_message' => $e->getMessage(),
+                'inputs' => $e->getTraceAsString(),
+            ]);
 
-            return back()->withErrors('Updating failed');
+            return redirect()->back()->with('admin_error', 'Đã xảy ra lỗi.');
+
         }
-
-        // Xóa ảnh cũ
-        if (File::exists(public_path('/images/'.$old_image))) {
-            File::delete(public_path('/images/'.$old_image));
-        }
-
-        return redirect()->route('product.index');
     }
 
     /**
