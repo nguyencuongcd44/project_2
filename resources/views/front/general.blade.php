@@ -8,15 +8,17 @@
         <title>Home</title>
 
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/Js/slick-1.8.1/slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="/Js/slick-1.8.1/slick/slick-theme.css"/>
         
+        <script type="text/javascript" src="\Js\jquery-3.7.1.min.js"></script>
+        <script type="text/javascript" src="/Js/jquery-ui-1.14.1/jquery-ui.min.js"></script>
         <script src="https://kit.fontawesome.com/a34c25a309.js" crossorigin="anonymous"></script>
         <script src="/Js/sweetalert2@11.js"></script>
         <script src="/Js/customize.js"></script>
-        <!-- jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <!-- Bootstrap JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        
+        <script type="text/javascript" src="/Js/slick-1.8.1/slick/slick.min.js"></script>
+
         <style>
             .cart{
                 position: relative;

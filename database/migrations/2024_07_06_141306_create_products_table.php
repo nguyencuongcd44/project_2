@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100)->unique();
             $table->string('image');
-            $table->float('price', 10 ,2);
+            $table->integer('price')->unsigned()->comment('Giá sản phẩm');
             $table->string('contents');
             $table->unsignedInteger('category_id');
             $table->tinyInteger('status')->default('0');

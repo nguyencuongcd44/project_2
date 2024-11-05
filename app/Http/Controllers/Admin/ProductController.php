@@ -148,7 +148,7 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, Product $product)
     {
         $MAX_IMAGES = 6;
-        $MAX_SIZE_MB = 1; // Dung lượng tối đa mỗi ảnh (MB)
+        $MAX_SIZE_MB = 2; // Dung lượng tối đa mỗi ảnh (MB)
 
         $post = $request->all();
         $post['image'] = '';
@@ -167,7 +167,6 @@ class ProductController extends Controller
 
         //check dung lượng mỗi ảnh
         if(isset($post['new_images'])){
-
             $over_flg = 0;
             foreach($post['new_images'] as $new_image){
                 if($new_image->getSize() > $MAX_SIZE_MB * 1024 * 1024){
@@ -230,7 +229,7 @@ class ProductController extends Controller
                     copy($new_folder_path.'/'.$img, $newImagePath);
                     $sort ++ ;
 
-                }else if(!File::exists($new_folder_path.'/'.$img) && isset($newImagesMap[$img])){ 
+                }else if(isset($newImagesMap[$img])){ 
                     // khi là ảnh mới
                     $parts = explode('.', $img);
                     $newImageExt = end($parts);
@@ -269,9 +268,6 @@ class ProductController extends Controller
 
             // xóa folder cũ , đổi tên folder mới
             File::deleteDirectory($folder_path);
-
-            $permissions = fileperms($new_folder_path);
-            $permissions = substr(sprintf('%o', $permissions), -3);
         
             rename($new_folder_path, $folder_path);
             chmod($folder_path, 0777); 

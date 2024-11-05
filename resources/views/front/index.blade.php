@@ -52,7 +52,7 @@
                             <!-- Product Info -->
                             <h3>{{ $product->name }}</h3>
                             <p><strong>Category:</strong> {{ $product->category->name }}</p>
-                            <p><strong>Price:</strong> {{ number_format($product->price, 0, ',', '.') }} VNĐ VNĐ</p>
+                            <p><strong>Price:</strong> {{ formatPrice($product->price) }} VNĐ</p>
                             <p class="product-description">{{ $product->contents }}</p>
                             <!-- Add to Cart and View Detail Buttons -->
                             <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>

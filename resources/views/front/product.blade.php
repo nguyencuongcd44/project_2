@@ -2,17 +2,91 @@
 @section('main')
 
 <style>
-    .img-tag{
+    .preview-image{
         display: flex;
         justify-content: center;
         align-items: center;
+        
+        .slick-slide{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .product-img {
-            height: 300px;
-            width: auto;
-            object-fit: cover;
+        .preview{
+            max-width: 400px; 
+            width: 100%;
+            object-fit: contain; 
+        }
+
+        .slick-next{
+            z-index: 1;
+            right: 0px;
+            width: 40px;
+            height: 40px;
+        }
+        .slick-next::before {
+            color: #449d44;
+            font-size: 40px;
+
+        }
+
+        .slick-prev{
+            z-index: 1;
+            left: 0px;
+            width: 40px;
+            height: 40px;
+        }
+        .slick-prev::before {
+            color: #449d44;
+            font-size: 40px;
         }
     }
+
+    .detail-image-nav{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        
+        .slick-list{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .slick-track{
+            width: 100%;
+            display: flex;
+            /* transform: none !important; */
+            gap: 10px;
+        }
+
+        .slick-slide{
+            width: 75px;
+            height: 75px;
+            border: 1.5px solid rgba(109, 109, 109, 0.541);
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+            object-fit: cover;
+            overflow: hidden;
+        }
+
+        .slick-current {
+            opacity: 1; 
+        }
+
+        .nav-images{
+            width: 100%; 
+            height: auto; 
+            object-fit: cover; 
+        }
+    }
+    
 </style>
 
 <div class="container">
@@ -23,12 +97,20 @@
             <div class="panel panel-default">
                 <div class="panel-body text-center">
                     <!-- Hiển thị ảnh sản phẩm -->
-                    @if($product->image)
-                        <div class="img-tag">
-                            <img src="/images/{{ $product->image }}" alt="{{ $product->name}}" class="img-responsive product-img" style="max-width: 100%; height: auto;">
+                    @if (count($imgs))
+                        <div class="preview-image">
+                            @foreach ($imgs as $img)
+                                <div><img class="preview" src="/product_img/{{ $product->pro_number }}/{{ $img }}" alt="{{ $product->name }}"></div>
+                            @endforeach
+                        </div>
+                        <hr>
+                        <div class="detail-image-nav">
+                            @foreach ($imgs as $img)
+                                <div><img class="nav-images" src="/product_img/{{ $product->pro_number }}/{{ $img }}" alt="{{ $product->name }}"></div>
+                            @endforeach
                         </div>
                     @else
-                        <p>Không có ảnh sản phẩm</p>
+                        <p>Không có ảnh chi tiết.</p>
                     @endif
                     
                 </div>
@@ -41,7 +123,7 @@
                 <div class="panel-body d-flex flex-column" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <h3>{{ $product->name }}</h3>
-                        <p><strong>Giá:</strong> {{ number_format($product->price, 0, ',', '.') }} VNĐ</p>
+                        <p><strong>Giá:</strong> {{ formatPrice($product->price) }} VNĐ</p>
                         <p><strong>Miêu tả:</strong> {{ $product->contents }}</p>
                     </div>
                     <hr>
@@ -114,4 +196,26 @@
     </div>
 </div>
 
+
+<script>
+    $(document).ready(function(){
+        $('.preview-image').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            fade: true,
+            asNavFor: '.detail-image-nav',
+            adaptiveHeight: false,
+            infinite: false,
+        });
+
+        $('.detail-image-nav').slick({
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            // asNavFor: '.preview-image',
+            dots: false, 
+            focusOnSelect: true,
+            infinite: false,
+        });
+    });
+</script>
 @stop

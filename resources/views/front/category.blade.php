@@ -47,7 +47,7 @@
                 </td>
 
                 <!-- Cột Giá sản phẩm -->
-                <td>{{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
+                <td>{{ formatPrice($product->price) }} VNĐ</td>
 
                 <!-- Cột Mô tả (giới hạn số lượng hiển thị) -->
                 <td>{{ Str::limit($product->contents, 50, '...') }}</td>

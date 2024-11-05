@@ -42,7 +42,7 @@ class ProductUpdateRequest extends FormRequest
             'thumbnail_upload'  => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'images.*'      => 'image|mimes:jpeg,png,jpg,gif', 
             'contents'      => 'required',
-            'price'         => 'required|numeric|digits_between:1,8',
+            'price'         => 'required|numeric|digits_between:4,10',
             'category_id'   => 'required',
             'status'        => 'required'
         ];
@@ -66,7 +66,7 @@ class ProductUpdateRequest extends FormRequest
             
             'price.required' => 'Vui lòng nhập giá sản phẩm.',
             'price.numeric' => 'Giá sản phẩm phải là một số.',
-            'price.digits_between' => 'Giá sản phẩm phải nằm trong khoảng từ 1 đến 8 chữ số.',
+            'price.digits_between' => 'Giá sản phẩm phải nằm trong khoảng từ 4 đến 10 chữ số.',
             
             'category_id.required' => 'Vui lòng chọn danh mục cho sản phẩm.',
             

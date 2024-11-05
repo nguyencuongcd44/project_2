@@ -73,7 +73,7 @@
                         </td>
 
                         <!-- Giá sản phẩm -->
-                        <td style="width: 15%;">{{ number_format($item->price, 0, ',', '.') }} VNĐ</td>
+                        <td style="width: 15%;">{{ formatPrice($item->price) }} VNĐ</td>
 
                         <!-- Số lượng và nút Update căn ngang hàng -->
                         <td style="width: 15%;">
@@ -89,7 +89,7 @@
                         </td>
         
                         <!-- Thành tiền -->
-                        <td style="width: 20%;">{{ $item->price * $item->quantity }} VNĐ</td>
+                        <td style="width: 20%;">{{ formatPrice($item->price * $item->quantity) }} VNĐ</td>
         
                         <!-- Nút Remove -->
                         <td style="width: 10%;">
@@ -109,7 +109,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-sm-12 text-right">
-                <p class="cart-summary">Tổng số tiền: <span class="total-price">{{ number_format($cart->totalPrice, 0, ',', '.') }} VNĐ</span></p>
+                <p class="cart-summary">Tổng số tiền: <span class="total-price">{{ formatPrice($cart->totalPrice) }} VNĐ</span></p>
                 <button class="btn btn-success">Thanh toán</button>
             </div>
         </div>

@@ -35,7 +35,12 @@ class HomeController extends Controller
     public function detail(Product $product)
     {
         $comments = Comments::where('product_id', $product->id)->orderBy('id', 'DESC')->get();
-        return view('front.product')->with(['product' => $product, 'comments' => $comments]);
+        $imgs = [];
+        if($product->image){
+            $imgs = explode('|->', $product->image);
+            $imgs = array_filter($imgs);
+        }
+        return view('front.product')->with(['product' => $product, 'imgs'=>$imgs, 'comments' => $comments]);
         
     }
 }
