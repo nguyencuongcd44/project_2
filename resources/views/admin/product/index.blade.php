@@ -34,7 +34,7 @@
             <td>{{ $product->name}}</td>
 
             <td>
-                <img src="/images/{{ $product->image }}" alt="{{ $product->name}}"></img>
+                <img src="/product_img/{{ $product->thumbnail }}" alt="{{ $product->name}}"></img>
             </td>
 
             <td>{{ formatPrice($product->price)}} VND</td>

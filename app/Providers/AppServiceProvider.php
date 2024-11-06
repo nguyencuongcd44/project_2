@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Cart;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Category;
+use Illuminate\Support\Arr;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -26,7 +27,12 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', function($view){
             $cats = Category::orderBy('id', 'DESC')->paginate(10);
             $cart = new Cart;
-            $view->with(compact(['cats', 'cart']));
+            $favoriteList = [];
+            if(session('favorite')){
+                $favoriteList = Arr::flatten(session('favorite'));
+                $favoriteList = array_unique($favoriteList);
+            }
+            $view->with(compact(['cats', 'cart', 'favoriteList']));
         });
     }
 }

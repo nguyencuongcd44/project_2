@@ -87,6 +87,32 @@
         }
     }
     
+    .detail-actions{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .favorite-btn{
+        background-color: unset;
+        padding: 0;
+
+        .heart-icon{
+            display: inline-block;
+            padding: 0;
+            font-size: 40px;
+        }
+    }
+    .heart-icon:focus-visible {
+        outline: unset;
+    }
+    .heart-icon.active {
+        color: red; 
+    }
+    .favorite-btn:hover {
+        color: #e74c3c;
+    }
+
 </style>
 
 <div class="container">
@@ -129,11 +155,14 @@
                     <hr>
                     <!-- Thêm vào giỏ hàng (luôn nằm dưới cùng) -->
                     <form action="{{ route('cart.add', $product->id) }}" method="get">
-                        <div class="input-group">
+                        <div class="input-group detail-actions">
                             <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="max-width: 100px;">
                             <span class="input-group-btn">
                                 <button type= "submit" class="btn btn-success" type="button">Thêm vào giỏ hàng</button>
                             </span>
+                            <button type="button" class="btn favorite-btn" data-id="{{ $product->id }}">
+                                <span class="heart-icon {{ in_array($product->id, $favoriteList) ? 'active' : '' }}">&#10084;</span>
+                            </button>
                         </div>
                     </form>
                 </div>

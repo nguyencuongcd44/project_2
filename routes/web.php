@@ -5,6 +5,8 @@ use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\AccountController;
 use App\Http\Controllers\Front\CommentController;
+use App\Http\Controllers\Front\FavoriteController;
+use App\Http\Controllers\Front\SearchController;
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -41,6 +43,19 @@ Route::middleware('savePreUrl')->group(function () {
         Route::post('/post/{product}', [CommentController::class, 'post_cmt'])->name('front.post_cmt');
         Route::put('/update', [CommentController::class, 'update_cmt'])->name('front.update_cmt');
         Route::get('/delete/{id}', [CommentController::class, 'delete_cmt'])->name('front.delete_cmt');
+    });
+
+    // Favorite routes 
+    Route::prefix('favorite')->group(function () {
+        Route::get('/', [FavoriteController::class, 'show'])->name('favorite');
+        Route::post('/add', [FavoriteController::class, 'add']);
+        Route::post('/delete', [FavoriteController::class, 'delete']);
+        Route::post('/clear', [FavoriteController::class, 'clear']);
+    });
+
+    // Search routes 
+    Route::prefix('search')->group(function () {
+        Route::get('/', [SearchController::class, 'search'])->name('front.search');
     });
 
     

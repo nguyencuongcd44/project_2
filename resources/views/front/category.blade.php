@@ -15,6 +15,25 @@
         vertical-align: middle;
     }
     
+    .favorite-btn{
+        background-color: unset;
+        padding: 0;
+
+        .heart-icon{
+            display: inline-block;
+            padding: 0;
+            font-size: 40px;
+        }
+    }
+    .heart-icon:focus-visible {
+        outline: unset;
+    }
+    .favorite-btn:hover {
+        color: #e74c3c;
+    }
+    .heart-icon.active {
+        color: red; 
+    }
 </style>
 <div class="container">
     <h1 class="text-center">Sản Phẩm thuộc {{ $category->name }}</h1>
@@ -29,37 +48,35 @@
                 <th>Giá (vnd)</th>
                 <th>Miêu tả</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
 
         <tbody>
             @foreach($products as $product)
             <tr>
-                <!-- Cột ID -->
                 <td>{{ $product->id }}</td>
 
-                <!-- Cột Tên sản phẩm -->
                 <td>{{ $product->name }}</td>
 
-                <!-- Cột Ảnh sản phẩm -->
                 <td>
                     <img src="/images/{{ $product->image }}" alt="{{ $product->name }}" class="img-responsive" style="max-width: 100px; height: auto;">
                 </td>
 
-                <!-- Cột Giá sản phẩm -->
                 <td>{{ formatPrice($product->price) }} VNĐ</td>
 
-                <!-- Cột Mô tả (giới hạn số lượng hiển thị) -->
                 <td>{{ Str::limit($product->contents, 50, '...') }}</td>
 
-                <!-- Cột Chi tiết và thêm vào giỏ hàng -->
-                <td style="display: flex; align-items: center;">
-                    <!-- Link đến chi tiết sản phẩm -->
+                <td style="display:flex; flex-direction:column; align-items:center">
                     <div class="btn-block text-center">
                         <a href="{{ route('front.product', $product->id) }}" class="btn btn-primary">Chi Tiết</a>
                     </div>
+                    <button type="button" class="btn favorite-btn" data-id="{{ $product->id }}">
+                        <span class="heart-icon {{ in_array($product->id, $favoriteList) ? 'active' : '' }}">&#10084;</span>
+                    </button>
+                </td>
 
-                    <!-- Ô nhập số lượng và thêm vào giỏ hàng -->
+                <td style="">
                     <div class="text-center" style="margin-top: 10px;">
                         <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="width: 100%; margin: 10px auto;">
                         <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success btn-block" type="button">Thêm vào giỏ hàng</a>

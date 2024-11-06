@@ -1,3 +1,6 @@
+
+
+
 // Thiết lập cấu hình mặc định cho SweetAlert
 const defaultSwal = Swal.mixin({
     position: 'center',
@@ -153,3 +156,38 @@ function showInfoAlert(message) {
         timerProgressBar: true
     });
 }
+
+
+$(document).ready(function(){
+    const _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': _token
+        }
+    });
+
+    // thêm, xóa favorite
+    $('.favorite-btn').click(function() {
+        var productId = $(this).data('id');
+        var $heartIcon = $(this).find('.heart-icon');
+
+        var action = $heartIcon.hasClass('active') ? 'delete' : 'add';
+
+        $.ajax({
+            url: '/favorite/' + action, 
+            method: 'POST',
+            data: {
+                id: productId,
+            },
+            success: function(response) {
+                if (response.status === 'added') {
+                    $heartIcon.addClass('active'); 
+                } else if (response.status === 'deleted') {
+                    $heartIcon.removeClass('active');
+                }
+            }
+        });
+    });
+});
+

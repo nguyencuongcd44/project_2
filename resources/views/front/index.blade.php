@@ -2,7 +2,7 @@
 @section('main')
 
 <style>
-    /* Giới hạn hiển thị mô tả trong 2 dòng */
+    /* Giới hạn hiển thị mô tả trong 1 dòng */
     .product-description {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -17,7 +17,7 @@
         transition: all 0.3s ease;
     }
 
-    /* Hiệu ứng hover: thêm đổ bóng và thay đổi màu nền */
+    /* Hiệu ứng hover */
     .product-container:hover {
         box-shadow: 0 4px 8px rgba(88, 235, 132, 0.2);
         background-color: #f9f9f9;
@@ -29,17 +29,47 @@
         object-fit: cover;
     }
 
-    /* Khoảng cách giữa các nút */
+    /* Định dạng khoảng cách và kích thước của nút */
     .btn-product {
         margin-top: 10px;
     }
+
+    /* Nhỏ hơn nút "Chi tiết" và canh trái */
+    .btn-detail {
+        font-size: 14px;
+        padding: 6px 12px;
+        width: auto;
+    }
+
+    .favorite-btn {
+        font-size: 30px;
+        padding: 6px 12px;
+        color: #4b4444;
+        background-color: transparent;
+        border: none;
+    }
+
+    .favorite-btn:hover {
+        color: #e74c3c;
+    }
+
+    .heart-icon.active {
+        color: red; 
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
 </style>
+
 <div class="container">
     <h1 class="text-center">All Products</h1>
 
     <!-- Row chứa danh sách sản phẩm -->
     <div class="row">
-        <!-- Product 1 -->
         @if (!count($products))
             <h2>Chưa có sản phẩm nào.</h2>
         @else
@@ -48,15 +78,20 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <!-- Product Image -->
-                            <img src="/images/{{ $product->image }}" alt="{{ $product->name}}" class="img-responsive product-img">
+                            <img src="/images/{{ $product->image }}" alt="{{ $product->name }}" class="img-responsive product-img">
                             <!-- Product Info -->
                             <h3>{{ $product->name }}</h3>
                             <p><strong>Category:</strong> {{ $product->category->name }}</p>
                             <p><strong>Price:</strong> {{ formatPrice($product->price) }} VNĐ</p>
                             <p class="product-description">{{ $product->contents }}</p>
-                            <!-- Add to Cart and View Detail Buttons -->
+                            <!-- Add to Cart Button -->
                             <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
-                            <a href="{{ route('front.product', $product->id) }}" class="btn btn-primary btn-block btn-product">Chi tiết</a>
+                            <div class="btn-container">
+                                <button type="button" class="btn favorite-btn" data-id="{{ $product->id }}">
+                                    <span class="heart-icon {{ in_array($product->id, $favoriteList) ? 'active' : '' }}">&#10084;</span>
+                                </button>
+                                <a href="{{ route('front.product', $product->id) }}" class="btn btn-primary btn-detail">Chi tiết</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -64,7 +99,6 @@
 
             {{ $products->links() }}
         @endif
-        <!-- Thêm các sản phẩm khác theo mẫu trên -->
     </div>
 </div>
 

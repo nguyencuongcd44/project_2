@@ -31,7 +31,7 @@ class ProductController extends Controller
     public function index()
     {
         // Lấy tất cả sản phẩm cùng với tên danh mục của chúng
-        $products = Product::with('category')->paginate(5);
+        $products = Product::with('category')->orderby('id', 'DESC')->paginate(25);
 
         return view('admin.product.index', compact('products'));
     }

@@ -40,6 +40,9 @@
         height: 20px; 
         cursor: pointer; 
     }
+    .pro_number{
+        cursor: not-allowed;
+    }
 </style>
 
 <h1>Form Create Product</h1>
@@ -56,7 +59,7 @@
 
         <div class="form-group">
             <label for="">Mã sản phẩm</label>
-            <input type="text" class="form-control" name="pro_number" value="{{ $product->pro_number }}" placeholder="Nhập mã sản phẩm">
+            <input type="text" class="form-control pro_number" name="pro_number" value="{{ $product->pro_number }}" placeholder="Nhập mã sản phẩm" readonly>
         </div>
 
         <div class="form-group">

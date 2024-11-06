@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Home</title>
 
@@ -20,6 +21,19 @@
         <script type="text/javascript" src="/Js/slick-1.8.1/slick/slick.min.js"></script>
 
         <style>
+            .navbar{
+                background-color: #a5d1a1;
+            }
+            .navbar-nav{
+                li{
+                    a{
+                        background-color: unset;
+                    }
+                }
+            }
+            .navbar .form-control.search-keyword {
+                width: 500px; 
+            }
             .cart{
                 position: relative;
             }
@@ -67,19 +81,68 @@
     <body>
         <nav class="navbar navbar-inverse">
             <div class="container">
-                <!-- Navbar Brand -->
-                <a class="navbar-brand" href="#">Title</a>
-    
-                <!-- Menu Items căn trái -->
                 <ul class="nav navbar-nav">
-                    <li class="active">
+                    <li class="">
                         <a href="/">Home</a>
                     </li>
                 </ul>
                 
-                <!-- Phần này căn phải -->
+                <ul class="nav navbar-nav">
+                    <li class="">
+                        <a href="{{ route('favorite') }}">Favorites</a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-center">
+                    <form method="GET" action="{{ route('front.search') }}" class="navbar-form navbar-left" id="searchForm">
+                        @csrf
+                        <div class="form-group">
+                            <!-- Input tìm kiếm sản phẩm -->
+                            <input type="text" id="searchKeyword" class="form-control search-keyword" name="keyWord" placeholder="Tìm kiếm tên sản phẩm..." autocomplete="off">
+                            
+                            <!-- Khu vực hiển thị nút điều kiện và nút tìm kiếm -->
+                            <button type="button" id="toggleFilters" class="btn btn-secondary">
+                                Điều kiện
+                            </button>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Khu vực điều kiện tìm kiếm ẩn -->
+                        <div id="searchFilters" style="display: none;">
+                            <div class="form-group">
+                                <label for="categoryFilter">Danh mục:</label>
+                                <select id="categoryFilter" class="form-control" name="Category">
+                                    <option value="">Tất cả</option>
+                                    @foreach($cats as $cat)
+                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pro_number">Mã sản phẩm:</label>
+                                <input type="text" id="pro_number" class="form-control" name="productNumber">
+                            </div>
+                            <div class="form-group">
+                                <label for="minPrice">Giá thấp nhất:</label>
+                                <input type="number" id="minPrice" class="form-control" name="minPrice" min=1000>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxPrice">Giá cao nhất:</label>
+                                <input type="number" id="maxPrice" class="form-control" name="maxPrice">
+                            </div>
+                        </div>
+        
+                        <!-- Khu vực hiển thị kết quả tìm kiếm -->
+                        <div id="searchResults" class="list-group" style="display: none; position: absolute; z-index: 1000; background-color: white;">
+                            <!-- Kết quả tìm kiếm sẽ hiển thị tại đây -->
+                        </div>
+                    </form>
+                </ul>
+
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- Cart Icon -->
                     <li>
                         <a href="{{ route('cart') }}">
                             <i class="fa fa-shopping-cart fa-2x cart"></i>
@@ -89,9 +152,7 @@
                         </a>
                     </li>
     
-                    <!-- Kiểm tra người dùng đã đăng nhập hay chưa -->
                     @if (Auth::guard('cus')->check())
-                        <!-- Hiển thị tên người dùng và nút đăng xuất -->
                         <li>
                             <strong class="navbar-text" style="color: #fff;">{{ Auth::guard('cus')->user()->name }}</strong>
                         </li>
@@ -102,7 +163,6 @@
                             </form>
                         </li>
                     @else
-                        <!-- Hiển thị nút đăng nhập nếu chưa đăng nhập -->
                         <li>
                             <a href="{{ route('account.login') }}" class="btn btn-primary navbar-btn">Đăng Nhập</a>
                         </li>
@@ -131,6 +191,64 @@
         <div class="container">
             @yield('main')
         </div>
+            
+        <script>
+            $(document).ready(function() {
+                $('#toggleFilters').on('click', function() {
+                    $('#searchFilters').toggle();
+                });
+            
+                $('#searchKeyword').on('focus', function() {
+                    $('#searchResults').show();
+                });
+            
+                let timeout;
+                $('#searchKeyword').on('input', function() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function() {
+                        let keyword = $('#searchKeyword').val();
+                        searchProducts(keyword);
+                    }, 800); 
+                });
+
+                
+                // Ẩn khu vực kết quả khi nhấp ra ngoài
+                $(document).click(function(e) {
+                    if (!$(e.target).closest('#searchForm').length) {
+                        $('#searchResults').hide();
+                    }
+                });
+            });
+
+            function searchProducts(keyword) {
+                let category = $('#categoryFilter').val();
+                let minPrice = $('#minPrice').val();
+                let maxPrice = $('#maxPrice').val();
+        
+                $.ajax({
+                    url: "{{ route('front.search') }}",
+                    method: 'GET',
+                    data: {
+                        name: keyword,
+                        category: category,
+                        min_price: minPrice,
+                        max_price: maxPrice
+                    },
+                    success: function(products) {
+                        $('#searchResults').empty();
+                        if (products.length > 0) {
+                            $.each(products, function(index, product) {
+                                $('#searchResults').append(
+                                    `<a href="/product/${product.id}" class="list-group-item">${product.name} - ${product.price} đ</a>`
+                                );
+                            });
+                        } else {
+                            $('#searchResults').append('<p class="list-group-item">Không tìm thấy sản phẩm nào.</p>');
+                        }
+                    }
+                });
+            }
+        </script>
             
         
     </body>
