@@ -56,6 +56,7 @@ Route::middleware('savePreUrl')->group(function () {
     // Search routes 
     Route::prefix('search')->group(function () {
         Route::get('/', [SearchController::class, 'search'])->name('front.search');
+        Route::post('/reset', [SearchController::class, 'search_reset'])->name('front.search_reset');
     });
 
     

@@ -34,6 +34,16 @@
             .navbar .form-control.search-keyword {
                 width: 500px; 
             }
+            #searchResults {
+                max-height: 300px; 
+                overflow-y: auto; 
+                position: absolute;
+                z-index: 1000;
+                background-color: white;
+                width: 500px;
+                border: 1px solid #ccc; 
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            }
             .cart{
                 position: relative;
             }
@@ -95,10 +105,10 @@
 
                 <ul class="nav navbar-nav navbar-center">
                     <form method="GET" action="{{ route('front.search') }}" class="navbar-form navbar-left" id="searchForm">
-                        @csrf
                         <div class="form-group">
                             <!-- Input tìm kiếm sản phẩm -->
-                            <input type="text" id="searchKeyword" class="form-control search-keyword" name="keyWord" placeholder="Tìm kiếm tên sản phẩm..." autocomplete="off">
+                            <input type="text" id="searchKeyword" class="form-control search-input search-keyword" name="keyWord" 
+                            value="{{ session('searchConditions.keyWord','') }}" placeholder="Tìm kiếm tên sản phẩm..." autocomplete="off">
                             
                             <!-- Khu vực hiển thị nút điều kiện và nút tìm kiếm -->
                             <button type="button" id="toggleFilters" class="btn btn-secondary">
@@ -114,24 +124,27 @@
                         <div id="searchFilters" style="display: none;">
                             <div class="form-group">
                                 <label for="categoryFilter">Danh mục:</label>
-                                <select id="categoryFilter" class="form-control" name="Category">
+                                <select id="categoryFilter" class="form-control search-input" name="Category">
                                     <option value="">Tất cả</option>
                                     @foreach($cats as $cat)
-                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                        <option value="{{ $cat->id }}" {{ $cat->id == session('searchConditions.Category','')? 'selected' : '' }}>{{ $cat->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="pro_number">Mã sản phẩm:</label>
-                                <input type="text" id="pro_number" class="form-control" name="productNumber">
+                                <input type="text" id="pro_number" class="form-control search-input" name="productNumber" value="{{ session('searchConditions.productNumber','') }}">
                             </div>
                             <div class="form-group">
                                 <label for="minPrice">Giá thấp nhất:</label>
-                                <input type="number" id="minPrice" class="form-control" name="minPrice" min=1000>
+                                <input type="number" id="minPrice" class="form-control search-input" name="minPrice" value="{{ session('searchConditions.minPrice','') }}" min=1000>
                             </div>
                             <div class="form-group">
                                 <label for="maxPrice">Giá cao nhất:</label>
-                                <input type="number" id="maxPrice" class="form-control" name="maxPrice">
+                                <input type="number" id="maxPrice" class="form-control search-input" name="maxPrice" value="{{ session('searchConditions.maxPrice', '') }}">
+                            </div>
+                            <div class="form-group">
+                                <button type="button" id="search-reset" class="btn btn-danger">Reset</button>
                             </div>
                         </div>
         
@@ -207,7 +220,9 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(function() {
                         let keyword = $('#searchKeyword').val();
-                        searchProducts(keyword);
+                        if(keyword != ''){
+                            searchProducts(keyword);
+                        }
                     }, 800); 
                 });
 
@@ -218,21 +233,37 @@
                         $('#searchResults').hide();
                     }
                 });
+
+                // xóa điều kiện tìm kiếm
+                $('#search-reset').on('click', function() {
+                    $.ajax({
+                        url: "{{ route('front.search_reset') }}",
+                        method: 'POST',
+                        data: '',
+                        success: function(response) {
+                            if(response.status == 'OK'){
+                                $('.search-input').val('');
+                            }
+                        }
+                    });
+                });
             });
 
             function searchProducts(keyword) {
-                let category = $('#categoryFilter').val();
+                let Category = $('#categoryFilter').val();
                 let minPrice = $('#minPrice').val();
                 let maxPrice = $('#maxPrice').val();
+                let producNumber = $('#pro_number').val();
         
                 $.ajax({
                     url: "{{ route('front.search') }}",
                     method: 'GET',
                     data: {
-                        name: keyword,
-                        category: category,
-                        min_price: minPrice,
-                        max_price: maxPrice
+                        keyWord: keyword,
+                        Category: Category,
+                        productNumber: producNumber,
+                        minPrice: minPrice,
+                        maxPrice: maxPrice
                     },
                     success: function(products) {
                         $('#searchResults').empty();
