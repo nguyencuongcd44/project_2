@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -11,9 +12,9 @@
 
 
     <script src="/Js/sweetalert2@11.js"></script>
-    <script src="/Js/customize.js"></script>
     <script type="text/javascript" src="\Js\jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="/Js/jquery-ui-1.14.1/jquery-ui.min.js"></script>
+    <script src="/Js/customize.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
@@ -30,10 +31,13 @@
                     <a href="{{ route('admin.index')}}">Home</a>
                 </li>
                 <li>
-                    <a href="{{ route('category.index')}}">Category</a>
+                    <a href="{{ route('category.index')}}">Categories</a>
                 </li>
                 <li>
                     <a href="{{ route('product.index')}}">Products</a>
+                </li>
+                <li>
+                    <a href="{{ route('topping.index')}}">Toppings</a>
                 </li>
             </ul>
 

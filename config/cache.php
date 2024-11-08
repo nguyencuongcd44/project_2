@@ -96,7 +96,7 @@ return [
     ],
 
     'redis' => [
-        'client' => env('REDIS_CLIENT', 'predis'),  // Sử dụng Predis hoặc phpredis
+        'client' => env('REDIS_CLIENT', 'predis'), 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix'  => env('REDIS_PREFIX', 'laravel_database_'),
@@ -105,7 +105,7 @@ return [
             'host'     => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port'     => env('REDIS_PORT', 6379),
-            'database' => 0,  // Redis database number
+            'database' => 1,  // Redis database number
         ],
     ],
 

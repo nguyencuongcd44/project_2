@@ -242,7 +242,7 @@
                         data: '',
                         success: function(response) {
                             if(response.status == 'OK'){
-                                $('.search-input').val('');
+                                window.location.href = "/";
                             }
                         }
                     });
@@ -280,7 +280,5 @@
                 });
             }
         </script>
-            
-        
     </body>
 </html>

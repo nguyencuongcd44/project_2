@@ -11,6 +11,7 @@ use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ToppingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,7 @@ Route::prefix('admin')->group(function () {
         Route::resources([
             'category' => CategoryController::class,
             'product' => ProductController::class,
+            'topping' => ToppingController::class,
         ]);
 
         //logout

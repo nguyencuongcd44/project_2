@@ -34,4 +34,10 @@ class Product extends Model
     {
         return $this->hasMany(Comments::class, 'product_id', 'id');
     }
+    
+    // Mối quan hệ với topping
+    public function toppings()
+    {
+        return $this->belongsToMany(Topping::class, 'product_topping');
+    }
 }
