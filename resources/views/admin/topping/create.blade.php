@@ -52,9 +52,9 @@
 
         <div class="form-group">
             <label for="">Ảnh</label>
-            <img id="image_preview" name="image" alt="Ảnh Topping">
+            <img id="image_preview" name="imagePreview" alt="Ảnh Topping">
             <div>
-                <input type="file" id="thumbnail_upload" name="thumbnail_upload" accept="image/*">
+                <input type="file" id="image" name="image" accept="image/*">
             </div>
         </div>
 
@@ -66,8 +66,8 @@
         <div class="form-group">
             <label for="">Loại</label>
             <select name="type" id="type" class="form-control" required="required">
-                <option value="1">Topping riêng</option>
-                <option value="0">Topping kèm sản phẩm</option>
+                <option value="0">Topping riêng</option>
+                <option value="1">Topping kèm sản phẩm</option>
             </select>
         </div>
 
@@ -116,7 +116,7 @@
 <script>
     $(document).ready(function() {
         // Hiển thị thumbnail
-        $('#thumbnail_upload').change(function(e) {
+        $('#image').change(function(e) {
             const file = e.target.files[0];
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -128,7 +128,7 @@
         // Hiển thị/ẩn trường chọn sản phẩm khi thay đổi loại topping
         $('#type').change(function() {
             var type = $(this).val();
-            if (type == '0') {
+            if (type == '1') {
                 // Nếu là topping kèm sản phẩm, hiển thị trường chọn sản phẩm
                 $('#product_select_group').show();
             } else {

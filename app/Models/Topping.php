@@ -13,6 +13,7 @@ class Topping extends Model
         'name',
         'image',
         'price',
+        'type',
         'status',
     ];
 

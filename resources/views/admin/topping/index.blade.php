@@ -7,8 +7,8 @@
         height: auto;
     }
 </style>
-<h1>Sản Phẩm</h1>
-<a href="{{ route('product.create')}}" class="btn btn-success">Thêm Mới</a>
+<h1>Toppings</h1>
+<a href="{{ route('topping.create')}}" class="btn btn-success">Thêm Mới</a>
 <hr>
 
 <table class="table table-hover">
@@ -16,10 +16,10 @@
         <tr>
             <th>ID</th>
             <th>Tên</th>
-            <th>Thumbnail</th>
+            <th>Ảnh</th>
             <th>Giá (vnd)</th>
-            <th>Miêu tả</th>
-            <th>Danh mục</th>
+            <th>Loại</th>
+            <th>Liên kết</th>
             <th>Status</th>
             <th></th>
             <th></th>
@@ -27,29 +27,45 @@
     </thead>
 
     <tbody>
-        @foreach($products as $product)
+        @foreach($toppings as $topping)
         <tr>
-            <td>{{ $product->id}}</td>
+            <td>{{ $topping->id}}</td>
 
-            <td>{{ $product->name}}</td>
+            <td>{{ $topping->name}}</td>
 
             <td>
-                <img src="/product_img/{{ $product->thumbnail }}" alt="{{ $product->name}}"></img>
+                <img src="/topping_img/{{ $topping->image }}" alt="{{ $topping->name}}"></img>
             </td>
 
-            <td>{{ formatPrice($product->price)}} VND</td>
-
-            <td>{{ $product->contents}}</td>
-
-            <td>{{ $product->category->name}}</td>
-
-            <td>{{ $product->status == 0 ? 'Tạm Ẩn' : 'Hiển Thị'}}</td>
+            <td>{{ formatPrice($topping->price)}} VND</td>
+            
+            <td>
+                @if ($topping->type == 0)
+                    <p>Topping riêng</p>
+                @else
+                    <p>Topping kèm sản phẩm</p>
+                @endif
+            </td>
 
             <td>
-                <form id="deleteForm{{$product->id}}" action="{{ route('product.destroy', $product->id) }}" method="POST" role="form">
+                @if($topping->products->isEmpty())
+                    <em>Không có sản phẩm liên kết</em>
+                @else
+                    <ul>
+                        @foreach($topping->products as $product)
+                            <li>{{ $product->name }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </td>
+
+            <td>{{ $topping->status == 0 ? 'Tạm Ẩn' : 'Hiển Thị'}}</td>
+
+            <td>
+                <form id="deleteForm{{$topping->id}}" action="{{ route('topping.destroy', $topping->id) }}" method="POST" role="form">
                     @csrf @method('DELETE')
-                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-sm btn-primary">Sửa</a>
-                    <button onclick="formDeleteConfirm('{{ $product->id }}')" class="btn btn-sm btn-danger">Xóa</button>
+                    <a href="{{ route('topping.edit', $topping->id) }}" class="btn btn-sm btn-primary">Sửa</a>
+                    <button onclick="formDeleteConfirm('{{ $topping->id }}')" class="btn btn-sm btn-danger">Xóa</button>
                 </form>
             </td>
         </tr>
@@ -58,6 +74,5 @@
     </tbody>
 </table>
 
-{{ $products->links() }}
 
 @stop

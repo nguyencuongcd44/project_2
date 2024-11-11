@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('toppings', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image')->nullable(false);
             $table->integer('price')->unsigned()->comment('Giá');
-            $table->enum('type', [1, 2]);  // 1: kèm món, 2: riêng biệt
+            $table->tinyInteger('type', [0, 1]);  // 1: kèm món, 0: riêng biệt
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
         });
