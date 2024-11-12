@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ToppingController;
+use App\Http\Controllers\Front\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,14 +29,19 @@ use App\Http\Controllers\Admin\ToppingController;
 Route::middleware('savePreUrl')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/category/{category}', [HomeController::class, 'category'])->name('front.category');
-    Route::get('/product/{product}', [HomeController::class, 'detail'])->name('front.product');
+    Route::get('/product/{product}', [HomeController::class, 'product_detail'])->name('front.product');
 
     // Cart routes
     Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'cart'])->name('cart');
-        Route::get('/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
-        Route::get('/update/{product}', [CartController::class, 'update'])->name('cart.update');
-        Route::get('/delete/{id}', [CartController::class, 'delete'])->name('cart.delete');
+        Route::get('/add-product/{product}', [CartController::class, 'addProduct'])->name('cart.addProduct');
+        Route::get('/update-product/{product}', [CartController::class, 'updateProduct'])->name('cart.updateProduct');
+        Route::get('/delete-product/{id}', [CartController::class, 'deleteProduct'])->name('cart.deleteProduct');
+
+        Route::get('/add-topping/{topping}', [CartController::class, 'addTopping'])->name('cart.addTopping');
+        Route::get('/update-topping/{topping}', [CartController::class, 'updateTopping'])->name('cart.updateTopping');
+        Route::get('/delete-topping/{id}', [CartController::class, 'deleteTopping'])->name('cart.deleteTopping');
+
         Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
     });
 
@@ -58,6 +64,17 @@ Route::middleware('savePreUrl')->group(function () {
     Route::prefix('search')->group(function () {
         Route::get('/', [SearchController::class, 'search'])->name('front.search');
         Route::post('/reset', [SearchController::class, 'search_reset'])->name('front.search_reset');
+    });
+
+    // Toppings routes 
+    Route::prefix('toppings')->group(function () {
+        Route::get('/', [HomeController::class, 'show_topping'])->name('front.toppings');
+        Route::get('/{id}', [HomeController::class, 'topping_detail'])->name('front.topping.detail');
+    });
+
+    // Payment routes 
+    Route::prefix('payment')->group(function () {
+        Route::get('/method-select', [PaymentController::class, 'method_select'])->name('front.payment.method');
     });
 
     

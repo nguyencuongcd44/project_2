@@ -38,7 +38,7 @@
 <div class="container cart-container">
     <h1 class="text-center">Giỏ hàng của bạn</h1>
 
-    @if (!count($cart->cartItems))
+    @if ($cart->totalQuantity == 0 && $cart->totalPrice == 0)
         <div class="alert alert-info text-center" style="width: 100%;">
             <strong>Chưa có sản phẩm nào. Vui lòng mua hàng</strong>
         </div>
@@ -60,43 +60,88 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cart->cartItems as $item)
-                    <tr>
-                        <!-- Tên sản phẩm -->
-                        <td style="width: 25%;">
-                            <a href="{{ route('front.product', $item->id) }}">{{ $item->name }}</a>
-                        </td>
+                @if (count($cart->cartItems['products']))
+                    <td colspan="6"><strong>Sản phẩm</strong></td>
+                    @foreach ($cart->cartItems['products'] as $product)
+                        <tr>
+                            <!-- Tên sản phẩm -->
+                            <td style="width: 25%;">
+                                <a href="{{ route('front.product', $product->id) }}">{{ $product->name }}</a>
+                            </td>
 
-                        <!-- Hiển thị ảnh sản phẩm -->
-                        <td style="width: 15%;">
-                            <img src="/images/{{ $item->image }}" alt="{{ $item->name}}" class="img-responsive product-img">
-                        </td>
+                            <!-- Hiển thị ảnh sản phẩm -->
+                            <td style="width: 15%;">
+                                <img src="/product_img/{{ $product->pro_number }}/{{ $product->thumbnail }}" alt="{{ $product->name}}" class="img-responsive product-img">
+                            </td>
 
-                        <!-- Giá sản phẩm -->
-                        <td style="width: 15%;">{{ formatPrice($item->price) }} VNĐ</td>
+                            <!-- Giá sản phẩm -->
+                            <td style="width: 15%;">{{ formatPrice($product->price) }} VNĐ</td>
 
-                        <!-- Số lượng và nút Update căn ngang hàng -->
-                        <td style="width: 15%;">
-                            <form action="{{ route('cart.update', $item->id) }}" method="get">
-                                @csrf
-                                <div class="input-group">
-                                    <input type="number" class="form-control cart-item-quantity text-center" name="quantity" value="{{ $item->quantity }}" min="1">
-                                    <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary btn-sm" type="button">Update</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </td>
-        
-                        <!-- Thành tiền -->
-                        <td style="width: 20%;">{{ formatPrice($item->price * $item->quantity) }} VNĐ</td>
-        
-                        <!-- Nút Remove -->
-                        <td style="width: 10%;">
-                            <button onclick="deleteConfirm('{{ route('cart.delete', $item->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
-                        </td>
-                    </tr>
-                @endforeach
+                            <!-- Số lượng và nút Update căn ngang hàng -->
+                            <td style="width: 15%;">
+                                <form action="{{ route('cart.updateProduct', $product->id) }}" method="get">
+                                    @csrf
+                                    <div class="input-group">
+                                        <input type="number" class="form-control cart-item-quantity text-center" name="quantity" value="{{ $product->quantity }}" min="1">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary btn-sm" type="button">Update</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </td>
+            
+                            <!-- Thành tiền -->
+                            <td style="width: 20%;">{{ formatPrice($product->price * $product->quantity) }} VNĐ</td>
+            
+                            <!-- Nút Remove -->
+                            <td style="width: 10%;">
+                                <button onclick="deleteConfirm('{{ route('cart.deleteProduct', $product->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+
+                @if (count($cart->cartItems['toppings']))
+                    <td colspan="6"><strong>Topping</strong></td>
+                    @foreach ($cart->cartItems['toppings'] as $topping)
+                        <tr>
+                            <!-- Tên sản phẩm -->
+                            <td style="width: 25%;">
+                                <a href="{{ route('front.topping.detail', $topping->id) }}">{{ $topping->name }}</a>
+                            </td>
+
+                            <!-- Hiển thị ảnh sản phẩm -->
+                            <td style="width: 15%;">
+                                <img src="/topping_img/{{ $topping->image }}" alt="{{ $topping->name}}" class="img-responsive product-img">
+                            </td>
+
+                            <!-- Giá sản phẩm -->
+                            <td style="width: 15%;">{{ formatPrice($topping->price) }} VNĐ</td>
+
+                            <!-- Số lượng và nút Update căn ngang hàng -->
+                            <td style="width: 15%;">
+                                <form action="{{ route('cart.updateTopping', $topping->id) }}" method="get">
+                                    @csrf
+                                    <div class="input-group">
+                                        <input type="number" class="form-control cart-item-quantity text-center" name="quantity" value="{{ $topping->quantity }}" min="1">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary btn-sm" type="button">Update</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </td>
+            
+                            <!-- Thành tiền -->
+                            <td style="width: 20%;">{{ formatPrice($topping->price * $topping->quantity) }} VNĐ</td>
+            
+                            <!-- Nút Remove -->
+                            <td style="width: 10%;">
+                                <button onclick="deleteConfirm('{{ route('cart.deleteTopping', $topping->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+                
             </tbody>
         </table>
 
@@ -110,7 +155,7 @@
             </div>
             <div class="col-md-6 col-sm-12 text-right">
                 <p class="cart-summary">Tổng số tiền: <span class="total-price">{{ formatPrice($cart->totalPrice) }} VNĐ</span></p>
-                <button class="btn btn-success">Thanh toán</button>
+                <a href="{{ route('front.payment.method') }}" class="btn btn-success">Thanh toán</a>
             </div>
         </div>
     @endif

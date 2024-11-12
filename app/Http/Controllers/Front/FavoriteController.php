@@ -12,8 +12,7 @@ use Illuminate\Support\Arr;
 class FavoriteController extends Controller
 {
     public function show(Product $product, Favorite $favorites){
-        $favoriteItems = '';
-
+        $favoriteItems = [];
         if($favorites){
             $favorites = Arr::flatten(session('favorite'));
             $favorites = array_unique($favorites);

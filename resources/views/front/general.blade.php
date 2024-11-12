@@ -95,13 +95,16 @@
                     <li class="">
                         <a href="/">Home</a>
                     </li>
-                </ul>
-                
-                <ul class="nav navbar-nav">
+
                     <li class="">
                         <a href="{{ route('favorite') }}">Favorites</a>
                     </li>
+
+                    <li class="">
+                        <a href="{{ route('front.toppings') }}">Toppings</a>
+                    </li>
                 </ul>
+               
 
                 <ul class="nav navbar-nav navbar-center">
                     <form method="GET" action="{{ route('front.search') }}" class="navbar-form navbar-left" id="searchForm">

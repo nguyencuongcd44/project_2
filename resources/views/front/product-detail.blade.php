@@ -154,7 +154,7 @@
                     </div>
                     <hr>
                     <!-- Thêm vào giỏ hàng (luôn nằm dưới cùng) -->
-                    <form action="{{ route('cart.add', $product->id) }}" method="get">
+                    <form action="{{ route('cart.addProduct', $product->id) }}" method="get">
                         <div class="input-group detail-actions">
                             <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="max-width: 100px;">
                             <span class="input-group-btn">

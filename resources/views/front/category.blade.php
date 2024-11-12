@@ -78,8 +78,11 @@
 
                 <td style="">
                     <div class="text-center" style="margin-top: 10px;">
-                        <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="width: 100%; margin: 10px auto;">
-                        <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success btn-block" type="button">Thêm vào giỏ hàng</a>
+                        <form action="{{ route('cart.addProduct', $product->id) }}" method="get">
+                            @csrf
+                            <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="width: 100%; margin: 10px auto;">
+                            <button class="btn btn-success btn-block" type="submit">Thêm vào giỏ hàng</button>
+                        </form>
                     </div>
                 </td>
             </tr>

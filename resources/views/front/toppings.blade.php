@@ -66,38 +66,29 @@
 </style>
 
 <div class="container">
-    <h1 class="text-center">All Products</h1>
+    <h1 class="text-center">Tất cả toppings</h1>
 
     <!-- Row chứa danh sách sản phẩm -->
     <div class="row">
-        @if (!count($products))
+        @if (!count($toppings))
             <h2>Chưa có sản phẩm nào.</h2>
         @else
-            @foreach ($products as $product)
+            @foreach ($toppings as $topping)
                 <div class="col-sm-4 product-container">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <!-- Product Image -->
-                            <img src="/product_img/{{ $product->pro_number }}/{{ $product->thumbnail }}" alt="{{ $product->name }}" class="img-responsive product-img">
+                            <img src="/topping_img/{{ $topping->image }}" alt="{{ $topping->name }}" class="img-responsive product-img">
                             <!-- Product Info -->
-                            <h3>{{ $product->name }}</h3>
-                            <p><strong>Category:</strong> {{ $product->category->name }}</p>
-                            <p><strong>Price:</strong> {{ formatPrice($product->price) }} VNĐ</p>
-                            <p class="product-description">{{ $product->contents }}</p>
+                            <h3>{{ $topping->name }}</h3>
+                            <p><strong>Price:</strong> {{ formatPrice($topping->price) }} VNĐ</p>
                             <!-- Add to Cart Button -->
-                            <a href="{{ route('cart.addProduct', $product->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
-                            <div class="btn-container">
-                                <button type="button" class="btn favorite-btn" data-id="{{ $product->id }}">
-                                    <span class="heart-icon {{ in_array($product->id, $favoriteList) ? 'active' : '' }}">&#10084;</span>
-                                </button>
-                                <a href="{{ route('front.product', $product->id) }}" class="btn btn-primary btn-detail">Chi tiết</a>
-                            </div>
+                            <a href="{{ route('cart.addTopping', $topping->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
+                            <a href="{{ route('front.topping.detail', $topping->id) }}" class="btn btn-primary btn-block btn-detail">Chi tiết</a>
                         </div>
                     </div>
                 </div>
             @endforeach
-
-            {{ $products->links() }}
         @endif
     </div>
 </div>

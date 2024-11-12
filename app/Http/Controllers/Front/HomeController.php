@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Comments;
+use App\Models\Topping;
 use App\Models\User;
 use Comment;
 use Illuminate\Support\Arr;
@@ -33,7 +34,7 @@ class HomeController extends Controller
         return view('front.category', compact('category', 'products'));
     }
 
-    public function detail(Product $product)
+    public function product_detail(Product $product)
     {
         $comments = Comments::where('product_id', $product->id)->orderBy('id', 'DESC')->get();
         $imgs = [];
@@ -41,7 +42,19 @@ class HomeController extends Controller
             $imgs = explode('|->', $product->image);
             $imgs = array_filter($imgs);
         }
-        return view('front.product')->with(['product' => $product, 'imgs'=>$imgs, 'comments' => $comments]);
+        return view('front.product-detail')->with(['product' => $product, 'imgs'=>$imgs, 'comments' => $comments]);
         
+    }
+
+    public function show_topping()
+    {
+        $toppings = Topping::where('type', 0)->get();
+        return view('front.toppings', compact('toppings'));
+    }
+
+    public function topping_detail($id)
+    {
+        $topping = Topping::find($id)->first();
+        return view('front.topping-detail', compact('topping'));
     }
 }
