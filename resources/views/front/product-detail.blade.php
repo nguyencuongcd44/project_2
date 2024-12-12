@@ -246,5 +246,6 @@
             infinite: false,
         });
     });
+
 </script>
 @stop

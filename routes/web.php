@@ -7,6 +7,7 @@ use App\Http\Controllers\Front\AccountController;
 use App\Http\Controllers\Front\CommentController;
 use App\Http\Controllers\Front\FavoriteController;
 use App\Http\Controllers\Front\SearchController;
+use App\Http\Controllers\Front\PasswordResetController;
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -76,6 +77,12 @@ Route::middleware('savePreUrl')->group(function () {
     Route::prefix('payment')->group(function () {
         Route::get('/method-select', [PaymentController::class, 'method_select'])->name('front.payment.method');
     });
+
+    // Password reset routes
+    Route::get('forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.forgot');
+    Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('resetPassword.sendEmail');
+    Route::get('reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 
     
     // Account routes

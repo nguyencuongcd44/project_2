@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('text');
+            $table->text('text', 1500);
             
             // Định nghĩa cột customer_id và product_id là foreign key
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');

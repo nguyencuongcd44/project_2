@@ -12,15 +12,19 @@
         <link rel="stylesheet" type="text/css" href="/Js/slick-1.8.1/slick/slick.css"/>
         <link rel="stylesheet" type="text/css" href="/Js/slick-1.8.1/slick/slick-theme.css"/>
         
-        <script type="text/javascript" src="\Js\jquery-3.7.1.min.js"></script>
+        <script type="text/javascript" src="/Js/jquery-3.7.1.min.js"></script>
         <script type="text/javascript" src="/Js/jquery-ui-1.14.1/jquery-ui.min.js"></script>
         <script src="https://kit.fontawesome.com/a34c25a309.js" crossorigin="anonymous"></script>
         <script src="/Js/sweetalert2@11.js"></script>
-        <script src="/Js/customize.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/Js/slick-1.8.1/slick/slick.min.js"></script>
+        <script src="/Js/tinymce/js/tinymce/tinymce.min.js"></script>
+        <script src="/Js/customize.js"></script>
 
         <style>
+            .tox .tox-statusbar__branding {
+                display: none !important;
+            }
             .navbar{
                 background-color: #a5d1a1;
             }

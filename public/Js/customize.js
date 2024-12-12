@@ -1,5 +1,5 @@
 
-
+const _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 // Thiết lập cấu hình mặc định cho SweetAlert
 const defaultSwal = Swal.mixin({
@@ -77,7 +77,6 @@ function updateComment(url, commentId) {
                 data: {
                     id: commentId,
                     text: result.value,
-                    _token: '{{ csrf_token() }}' 
                 },
                 success: function(response) {
                     Swal.fire({
@@ -146,7 +145,7 @@ function showWarningAlert(message) {
     });
 }
 
-// Hàm hiển thị Cảnh báo
+// Hàm hiển thị Info
 function showInfoAlert(message) {
     defaultSwal.fire({
         icon: 'info',
@@ -158,9 +157,20 @@ function showInfoAlert(message) {
 }
 
 
-$(document).ready(function(){
-    const _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// Thiết lập tinymce 
+tinymce.init({
+    selector: 'textarea.tinymce', // Áp dụng cho textarea có class "tinymce"
+    plugins: 'link lists fontselect fontsize forecolor',
+    toolbar: 'undo redo | fontsize fontsizeselect | forecolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link',
+    font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
+    height: 200,
+    menubar: false,
+    statusbar: false, // Tắt thanh trạng thái
+    breadcrumbs: false, // Tắt breadcrumb
+});
 
+
+$(document).ready(function(){
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': _token

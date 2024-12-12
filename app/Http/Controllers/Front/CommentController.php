@@ -22,13 +22,14 @@ class CommentController extends Controller
         }
         
         $request->validate([
-            'comment' => 'required',
+            'comment' => 'required|max:255',
         ],[
             'comment.required' => 'Nội dung bình luận không được để trống.',
+            'comment.max' => 'Nội dung bình luận không được quá 255 ký tự.',
         ]);
 
         $comment = e($request->comment);
-        $data['user_id'] = Auth::guard('cus')->user()->id;
+        $data['customer_id'] = Auth::guard('cus')->user()->id;
         $data['product_id'] = $product;
         $data['text'] = $comment;
         Comments::create($data);
