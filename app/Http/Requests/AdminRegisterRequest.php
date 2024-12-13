@@ -3,11 +3,14 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\PasswordValidationTrait;
+use App\Traits\FailedValidationTrait;
 
 class AdminRegisterRequest extends FormRequest
 {
+    use PasswordValidationTrait; // Sử dụng Trait
+    use FailedValidationTrait; // Sử dụng Trait
     /**
      * Override phương thức failedValidation để chuyển lỗi vào error bag tùy chỉnh.
      *
@@ -15,11 +18,7 @@ class AdminRegisterRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            redirect()->back()
-                ->withErrors($validator, 'adminErrors') // Chuyển lỗi vào error bag tùy chỉnh 'adminErrors'
-                ->withInput()
-        );
+        $this->handleFailedValidation($validator, self::ADMIN_ERRORS);
     }
 
     /**
@@ -37,26 +36,21 @@ class AdminRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return array_merge([
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'role' => 'required',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
-        ];
+        ], $this->passwordRules());// Sử dụng rules từ Trait
     }
 
     public function messages(): array
     {
-        return [
+        return array_merge([
             'name.required' => 'Tên là bắt buộc.',
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Vui lòng nhập một địa chỉ email hợp lệ.',
             'email.unique' => 'Email này đã được sử dụng.',
             'role.required' => 'Vai trò là bắt buộc.',
-            'password.required' => 'Mật khẩu là bắt buộc.',
-            'confirm_password.required' => 'Xác nhận mật khẩu là bắt buộc.',
-            'confirm_password.same' => 'Xác nhận mật khẩu phải giống với mật khẩu.',
-        ];
+        ], $this->passwordMessages());// Sử dụng messages từ Trait
     }
 }

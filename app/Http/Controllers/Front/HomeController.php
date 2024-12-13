@@ -54,7 +54,7 @@ class HomeController extends Controller
 
     public function topping_detail($id)
     {
-        $topping = Topping::find($id)->first();
+        $topping = Topping::find($id);
         return view('front.topping-detail', compact('topping'));
     }
 }

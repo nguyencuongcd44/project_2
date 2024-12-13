@@ -40,12 +40,9 @@ class CategoryController extends Controller
             'name.unique' => 'Tên danh mục đã tồn tại.',
         ]);
     
-        // Kiểm tra lỗi và chuyển lỗi vào error bag 'adminErrors' nếu có
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator, 'adminErrors')
-                ->withInput();
-        }
+        // Kiểm tra lỗi validation và chuyển hướng
+        $this->handleValidationErrors(self::ADMIN_ERRORS, $validator);
+
         if(Category::create(request()->all())){
             return redirect()->route('category.index')->with('admin_success', 'Tạo danh mục thành công.');
         }
@@ -81,12 +78,8 @@ class CategoryController extends Controller
             'name.unique' => 'Tên danh mục đã tồn tại.',
         ]);
     
-        // Kiểm tra lỗi và chuyển lỗi vào error bag 'adminErrors' nếu có
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator, 'adminErrors')
-                ->withInput();
-        }
+        // Kiểm tra lỗi validation và chuyển hướng
+        $this->handleValidationErrors(self::ADMIN_ERRORS, $validator);
 
         if($category->update(request()->all())){
             return redirect()->route('category.index')->with('admin_success', 'Cập nhật danh mục thành công.');

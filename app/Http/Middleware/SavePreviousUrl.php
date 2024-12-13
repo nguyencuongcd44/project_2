@@ -19,28 +19,21 @@ class SavePreviousUrl
     protected $except = [ // Loại trừ middleware khỏi route này
         'account.login',
         'account.check_login', 
+        'password.forgot',
+        'forgotPassword.sendEmail',
+        'password.reset',
+        'password.reset.form'
     ];
-
 
     public function handle(Request $request, Closure $next): Response
     {
         if(!Auth::guard('cus')->check()){
             // Lưu URL hiện tại vào session
-            if (!$this->inExceptRoute($request)) {
+            if (!Route::currentRouteNamed($this->except)) {
                 session(['url.intended' => url()->current()]);
             }
         }
         return $next($request);
     }
 
-    protected function inExceptRoute(Request $request)
-    {
-        foreach ($this->except as $route) {
-            if (Route::currentRouteNamed($route)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

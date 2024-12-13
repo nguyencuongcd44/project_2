@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\PasswordValidationTrait;
+use Illuminate\Contracts\Validation\Validator;
 use App\Traits\FailedValidationTrait;
 
-class AdminLoginRequest extends FormRequest
+class AccountPasswordResetRequest extends FormRequest
 {
+    use PasswordValidationTrait; // Sử dụng Trait
     use FailedValidationTrait; // Sử dụng Trait
     /**
      * Override phương thức failedValidation để chuyển lỗi vào error bag tùy chỉnh.
@@ -16,7 +18,7 @@ class AdminLoginRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $this->handleFailedValidation($validator, self::ADMIN_ERRORS);
+        $this->handleFailedValidation($validator, self::FRONT_END_ERRORS);
     }
 
     /**
@@ -34,21 +36,16 @@ class AdminLoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'email' => 'required|email|exists:users',
-            'password' => 'required',
-        ];
+        return array_merge([
+            'token' => 'required|exists:password_reset_tokens,token',
+        ], $this->passwordRules());// Sử dụng rules từ Trait
     }
 
     public function messages(): array
     {
-        return [
-            'email.required' => 'Email không được để trống.',
-            'email.email' => 'Email không đúng định dạng.',
-            'email.exists' => 'Email hoặc mật khẩu không đúng.',
-            'password.required' => 'Mật khẩu không được để trống.',
-        ];
+        return array_merge([
+            'token.required' => 'Không nhận diện được token.',
+            'token.exists' => 'Token không hợp lệ.',
+        ], $this->passwordMessages()); // Sử dụng messages từ Trait
     }
-
-    
 }

@@ -3,11 +3,12 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\FailedValidationTrait;
 
 class AccountLoginRequest extends FormRequest
 {
+    use FailedValidationTrait; // Sử dụng Trait
     /**
      * Override phương thức failedValidation để chuyển lỗi vào error bag tùy chỉnh.
      *
@@ -15,11 +16,7 @@ class AccountLoginRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            redirect()->back()
-                ->withErrors($validator, 'frontErrors') // Chuyển lỗi vào error bag tùy chỉnh 'adminErrors'
-                ->withInput()
-        );
+        $this->handleFailedValidation($validator, self::FRONT_END_ERRORS);
     }
 
     /**

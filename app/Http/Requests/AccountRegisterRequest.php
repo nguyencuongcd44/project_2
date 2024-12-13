@@ -3,11 +3,14 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\PasswordValidationTrait;
+use App\Traits\FailedValidationTrait;
 
 class AccountRegisterRequest extends FormRequest
 {
+    use PasswordValidationTrait; // Sử dụng Trait
+    use FailedValidationTrait; // Sử dụng Trait
     /**
      * Override phương thức failedValidation để chuyển lỗi vào error bag tùy chỉnh.
      *
@@ -15,12 +18,9 @@ class AccountRegisterRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            redirect()->back()
-                ->withErrors($validator, 'frontErrors') // Chuyển lỗi vào error bag tùy chỉnh 'adminErrors'
-                ->withInput()
-        );
+        $this->handleFailedValidation($validator, self::FRONT_END_ERRORS);
     }
+    
 
     /**
      * Determine if the user is authorized to make this request.
@@ -37,18 +37,16 @@ class AccountRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return array_merge([
             'name' => 'required|min:6|max:100',
             'phone' => 'required|regex:/^\+?[0-9]{9,13}$/|unique:customers',
             'email' => 'required|email|min:6|max:100|unique:customers',
-            'password' => 'required|min:4',
-            'confimr_password' => 'required|same:password',
-        ];
+            ], $this->passwordRules());// Sử dụng rules từ Trait
     }
 
     public function messages(): array
     {
-        return [
+        return array_merge([
             'name.required' => 'Tên không được để trống.',
             'name.min' => 'Tên phải có ít nhất :min ký tự.',
             'name.max' => 'Tên không được vượt quá :max ký tự.',
@@ -62,12 +60,6 @@ class AccountRegisterRequest extends FormRequest
             'email.min' => 'Email phải có ít nhất :min ký tự.',
             'email.max' => 'Email không được vượt quá :max ký tự.',
             'email.unique' => 'Email đã tồn tại.',
-
-            'password.required' => 'Mật khẩu không được để trống.',
-            'password.min' => 'Mật khẩu phải có ít nhất :min ký tự.',
-
-            'confimr_password.required' => 'Vui lòng xác nhận mật khẩu.',
-            'confimr_password.same' => 'Mật khẩu xác nhận không khớp với mật khẩu.',
-        ];
+        ], $this->passwordMessages()); // Sử dụng messages từ Trait
     }
 }

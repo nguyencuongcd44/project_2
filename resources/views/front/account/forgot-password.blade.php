@@ -9,7 +9,7 @@
                     <h3 class="panel-title text-center">Nhập Email để đặt lại mật khẩu</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ route('resetPassword.sendEmail') }}" method="POST" role="form">
+                    <form action="{{ route('forgotPassword.sendEmail') }}" method="POST" role="form">
                         @csrf
                         <div class="form-group">
                             <label for="email">Địa chỉ Email:</label>

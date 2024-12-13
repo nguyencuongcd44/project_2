@@ -94,25 +94,6 @@ class AccountController extends Controller
         
     }
 
-    // forgot-password
-    public function forgot_password(){
-        return view('front.account.forgot-password');
-    }
-
-    public function check_forgot_password(){
-        
-    }
-
-    // reset-password
-    public function reset_password(){
-        return view('front.account.reset-password');
-    }
-
-    public function check_reset_password(){
-        
-    }
-
-
     //Logout
     public function logout(Request $request)
     {

@@ -80,9 +80,9 @@ Route::middleware('savePreUrl')->group(function () {
 
     // Password reset routes
     Route::get('forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.forgot');
-    Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('resetPassword.sendEmail');
-    Route::get('reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
-    Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
+    Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('forgotPassword.sendEmail');
+    Route::get('reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset.form');
+    Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
 
     
     // Account routes

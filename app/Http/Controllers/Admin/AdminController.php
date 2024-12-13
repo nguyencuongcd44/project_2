@@ -11,7 +11,6 @@ use Illuminate\Support\MessageBag;
 
 class AdminController extends Controller
 {
-
     // index
     public function index()
     {
