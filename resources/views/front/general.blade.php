@@ -96,15 +96,15 @@
         <nav class="navbar navbar-inverse">
             <div class="container">
                 <ul class="nav navbar-nav">
-                    <li class="">
+                    <li class="{{Route::is('home.index') ? 'active' : ''}}">
                         <a href="/">Home</a>
                     </li>
 
-                    <li class="">
-                        <a href="{{ route('favorite') }}">Favorites</a>
+                    <li class="{{Route::is('front.favorite*') ? 'active' : ''}}">
+                        <a href="{{ route('front.favorite.show') }}">Favorites</a>
                     </li>
 
-                    <li class="">
+                    <li class="{{Route::is('front.topping*') ? 'active' : ''}}">
                         <a href="{{ route('front.toppings') }}">Toppings</a>
                     </li>
                 </ul>
@@ -163,8 +163,8 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="{{ route('cart') }}">
+                    <li class="{{Route::is('front.cart*') ? 'active' : ''}}">
+                        <a href="{{ route('front.cart') }}">
                             <i class="fa fa-shopping-cart fa-2x cart"></i>
                             <span class="qtt-bg">
                                 <strong class="qtt-number">{{ $cart->totalQuantity }}</strong>
@@ -244,7 +244,7 @@
                 // xóa điều kiện tìm kiếm
                 $('#search-reset').on('click', function() {
                     $.ajax({
-                        url: "{{ route('front.search_reset') }}",
+                        url: "{{ route('front.search.reset') }}",
                         method: 'POST',
                         data: '',
                         success: function(response) {

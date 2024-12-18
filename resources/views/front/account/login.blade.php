@@ -33,7 +33,7 @@
                     <hr>
 
                     <p class="text-center">
-                        <a href="{{ route('password.forgot') }}">Quên mật khẩu?</a>
+                        <a href="{{ route('front.forgot-password') }}">Quên mật khẩu?</a>
                     </p>
                     <p class="text-center">
                         <a href="{{ route('account.register') }}" class="btn btn-link">Chưa có tài khoản? Đăng ký ngay</a>

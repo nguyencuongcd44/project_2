@@ -35,7 +35,7 @@ class FavoriteController extends Controller
 
     public function clear(Favorite $favorite){
         $favorite->clear();
-        return redirect(route('favorite'))->with('success', 'Xóa yêu thích thành công.');
+        return redirect(route('front.favorite.show'))->with('success', 'Xóa yêu thích thành công.');
     }
 
 }

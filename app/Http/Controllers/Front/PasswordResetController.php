@@ -57,7 +57,7 @@ class PasswordResetController extends Controller
             ]
         );
         // if($db){
-        //     $link = route('password.reset', $token);
+        //     $link = route('front.password.reset', $token);
 
         //     // Send email with link
         //     try {
@@ -80,7 +80,7 @@ class PasswordResetController extends Controller
     {
         $tokenRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
         if(!$tokenRecord || !$this->checkToken($tokenRecord->created_at)){
-            return redirect()->route('password.forgot')->with('error', 'Token không hợp lệ hoặc đã hết hạn.');
+            return redirect()->route('front.forgot-password')->with('error', 'Token không hợp lệ hoặc đã hết hạn.');
         }
         return view('front.account.reset-password-form', compact('tokenRecord'));
     }
@@ -93,7 +93,7 @@ class PasswordResetController extends Controller
         $token = $request->token;
         $tokenRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
         if(!$this->checkToken($tokenRecord->created_at)){
-            return redirect()->route('password.forgot')->with('error', 'Token đã hết hạn.');
+            return redirect()->route('front.forgot-password')->with('error', 'Token đã hết hạn.');
         }
 
         $email = $tokenRecord->email;

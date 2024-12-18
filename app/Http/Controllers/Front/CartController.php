@@ -31,7 +31,7 @@ class CartController extends Controller
         $quantity = request('quantity');
         $cart->updateProduct($id, $quantity);
 
-        return redirect(route('cart'))->with('success', 'Update sản phẩm thành công.');
+        return redirect(route('front.cart'))->with('success', 'Update sản phẩm thành công.');
     }
 
     
@@ -39,7 +39,7 @@ class CartController extends Controller
     {
         $cart->deleteProduct($id);
 
-        return redirect(route('cart'))->with('success', 'Xóa sản phẩm thành công.');
+        return redirect(route('front.cart'))->with('success', 'Xóa sản phẩm thành công.');
     }
 
 
@@ -58,7 +58,7 @@ class CartController extends Controller
         $quantity = request('quantity');
         $cart->updateTopping($id, $quantity);
 
-        return redirect(route('cart'))->with('success', 'Update topping thành công.');
+        return redirect(route('front.cart'))->with('success', 'Update topping thành công.');
     }
 
     
@@ -66,13 +66,13 @@ class CartController extends Controller
     {
         $cart->deleteTopping($id);
 
-        return redirect(route('cart'))->with('success', 'Xóa topping thành công.');
+        return redirect(route('front.cart'))->with('success', 'Xóa topping thành công.');
     }
 
     public function clear(Cart $cart) 
     {
         $cart->clear();
 
-        return redirect(route('cart'))->with('success', 'Xóa giỏ hàng thành công.');
+        return redirect(route('front.cart'))->with('success', 'Xóa giỏ hàng thành công.');
     }
 }

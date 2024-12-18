@@ -56,8 +56,8 @@ class AdminController extends Controller
         if (Auth::attempt($data)) {
             return redirect()->route('admin.index')->with('admin_success', 'Đăng nhập thành công.');
         }
+
         return redirect()->back()->with('admin_error', 'Email hoặc mật khẩu không đúng.');
-        
     }
 
      //Logout

@@ -83,7 +83,7 @@
                             <h3>{{ $topping->name }}</h3>
                             <p><strong>Price:</strong> {{ formatPrice($topping->price) }} VNĐ</p>
                             <!-- Add to Cart Button -->
-                            <a href="{{ route('cart.addTopping', $topping->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
+                            <a href="{{ route('front.cart.addTopping', $topping->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
                             <a href="{{ route('front.topping.detail', $topping->id) }}" class="btn btn-primary btn-block btn-detail">Chi tiết</a>
                         </div>
                     </div>

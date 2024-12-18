@@ -27,16 +27,16 @@
                 <a class="navbar-brand" href="#">Title</a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active">
+                <li class="{{Route::is('admin.*') ? 'active' : ''}}">
                     <a href="{{ route('admin.index')}}">Home</a>
                 </li>
-                <li>
+                <li class="{{Route::is('category.*') ? 'active' : ''}}">
                     <a href="{{ route('category.index')}}">Categories</a>
                 </li>
-                <li>
+                <li class="{{Route::is('product.*') ? 'active' : ''}}">
                     <a href="{{ route('product.index')}}">Products</a>
                 </li>
-                <li>
+                <li class="{{Route::is('topping.*') ? 'active' : ''}}">
                     <a href="{{ route('topping.index')}}">Toppings</a>
                 </li>
             </ul>

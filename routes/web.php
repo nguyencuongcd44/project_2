@@ -34,16 +34,16 @@ Route::middleware('savePreUrl')->group(function () {
 
     // Cart routes
     Route::prefix('cart')->group(function () {
-        Route::get('/', [CartController::class, 'cart'])->name('cart');
-        Route::get('/add-product/{product}', [CartController::class, 'addProduct'])->name('cart.addProduct');
-        Route::get('/update-product/{product}', [CartController::class, 'updateProduct'])->name('cart.updateProduct');
-        Route::get('/delete-product/{id}', [CartController::class, 'deleteProduct'])->name('cart.deleteProduct');
+        Route::get('/', [CartController::class, 'cart'])->name('front.cart');
+        Route::get('/add-product/{product}', [CartController::class, 'addProduct'])->name('front.cart.addProduct');
+        Route::get('/update-product/{product}', [CartController::class, 'updateProduct'])->name('front.cart.updateProduct');
+        Route::get('/delete-product/{id}', [CartController::class, 'deleteProduct'])->name('front.cart.deleteProduct');
 
-        Route::get('/add-topping/{topping}', [CartController::class, 'addTopping'])->name('cart.addTopping');
-        Route::get('/update-topping/{topping}', [CartController::class, 'updateTopping'])->name('cart.updateTopping');
-        Route::get('/delete-topping/{id}', [CartController::class, 'deleteTopping'])->name('cart.deleteTopping');
+        Route::get('/add-topping/{topping}', [CartController::class, 'addTopping'])->name('front.cart.addTopping');
+        Route::get('/update-topping/{topping}', [CartController::class, 'updateTopping'])->name('front.cart.updateTopping');
+        Route::get('/delete-topping/{id}', [CartController::class, 'deleteTopping'])->name('front.cart.deleteTopping');
 
-        Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
+        Route::get('/clear', [CartController::class, 'clear'])->name('front.cart.clear');
     });
 
     // Comment routes 
@@ -55,16 +55,16 @@ Route::middleware('savePreUrl')->group(function () {
 
     // Favorite routes 
     Route::prefix('favorite')->group(function () {
-        Route::get('/', [FavoriteController::class, 'show'])->name('favorite');
-        Route::post('/add', [FavoriteController::class, 'add']);
-        Route::post('/delete', [FavoriteController::class, 'delete']);
-        Route::post('/clear', [FavoriteController::class, 'clear']);
+        Route::get('/', [FavoriteController::class, 'show'])->name('front.favorite.show');
+        Route::post('/add', [FavoriteController::class, 'add'])->name('front.favorite.add');
+        Route::post('/delete', [FavoriteController::class, 'delete'])->name('front.favorite.delete');
+        Route::post('/clear', [FavoriteController::class, 'clear'])->name('front.favorite.clear');
     });
 
     // Search routes 
     Route::prefix('search')->group(function () {
         Route::get('/', [SearchController::class, 'search'])->name('front.search');
-        Route::post('/reset', [SearchController::class, 'search_reset'])->name('front.search_reset');
+        Route::post('/reset', [SearchController::class, 'search_reset'])->name('front.search.reset');
     });
 
     // Toppings routes 
@@ -79,10 +79,10 @@ Route::middleware('savePreUrl')->group(function () {
     });
 
     // Password reset routes
-    Route::get('forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.forgot');
-    Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('forgotPassword.sendEmail');
-    Route::get('reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset.form');
-    Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
+    Route::get('forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('front.forgot-password');
+    Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('front.forgot-password.sendEmail');
+    Route::get('reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('front.password.reset.form');
+    Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('front.password.reset');
 
     
     // Account routes
@@ -96,13 +96,13 @@ Route::middleware('savePreUrl')->group(function () {
         Route::get('/register', [AccountController::class, 'register'])->name('account.register');
         Route::post('/register', [AccountController::class, 'check_register']);
         
-        //forgot password
-        Route::get('/forgot-password', [AccountController::class, 'forgot_password'])->name('account.forgot-password');
-        Route::post('/forgot-password', [AccountController::class, 'check_forgot_password']);
+        // //forgot password
+        // Route::get('/forgot-password', [AccountController::class, 'forgot_password'])->name('account.forgot-password');
+        // Route::post('/forgot-password', [AccountController::class, 'check_forgot_password']);
 
-        //reset password
-        Route::get('/reset-password', [AccountController::class, 'reset_password'])->name('account.forgot-password');
-        Route::post('/reset-password', [AccountController::class, 'check_reset_password']);
+        // //reset password
+        // Route::get('/reset-password', [AccountController::class, 'reset_password'])->name('account.forgot-password');
+        // Route::post('/reset-password', [AccountController::class, 'check_reset_password']);
 
         // Customer routes 
         Route::middleware('customer')->group(function () {

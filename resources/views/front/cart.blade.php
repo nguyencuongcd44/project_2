@@ -79,7 +79,7 @@
 
                             <!-- Số lượng và nút Update căn ngang hàng -->
                             <td style="width: 15%;">
-                                <form action="{{ route('cart.updateProduct', $product->id) }}" method="get">
+                                <form action="{{ route('front.cart.updateProduct', $product->id) }}" method="get">
                                     @csrf
                                     <div class="input-group">
                                         <input type="number" class="form-control cart-item-quantity text-center" name="quantity" value="{{ $product->quantity }}" min="1">
@@ -95,7 +95,7 @@
             
                             <!-- Nút Remove -->
                             <td style="width: 10%;">
-                                <button onclick="deleteConfirm('{{ route('cart.deleteProduct', $product->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
+                                <button onclick="deleteConfirm('{{ route('front.cart.deleteProduct', $product->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -120,7 +120,7 @@
 
                             <!-- Số lượng và nút Update căn ngang hàng -->
                             <td style="width: 15%;">
-                                <form action="{{ route('cart.updateTopping', $topping->id) }}" method="get">
+                                <form action="{{ route('front.cart.updateTopping', $topping->id) }}" method="get">
                                     @csrf
                                     <div class="input-group">
                                         <input type="number" class="form-control cart-item-quantity text-center" name="quantity" value="{{ $topping->quantity }}" min="1">
@@ -136,7 +136,7 @@
             
                             <!-- Nút Remove -->
                             <td style="width: 10%;">
-                                <button onclick="deleteConfirm('{{ route('cart.deleteTopping', $topping->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
+                                <button onclick="deleteConfirm('{{ route('front.cart.deleteTopping', $topping->id) }}')" class="btn btn-danger btn-sm">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -150,7 +150,7 @@
             <div class="col-md-6 col-sm-12">
                 <div class="cart-buttons">
                     <a href="{{ route('home.index') }}" class="btn btn-primary">Quay lại mua sắm</a>
-                    <button onclick="deleteConfirm('{{ route('cart.clear') }}')" class="btn btn-danger">Xóa giỏ hàng</button>
+                    <button onclick="deleteConfirm('{{ route('front.cart.clear') }}')" class="btn btn-danger">Xóa giỏ hàng</button>
                 </div>
             </div>
             <div class="col-md-6 col-sm-12 text-right">

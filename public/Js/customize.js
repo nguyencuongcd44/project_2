@@ -103,6 +103,7 @@ function updateComment(url, commentId) {
 function showErrorAlert(errors) {
     let errorHtml = '<ul class="error danger text-danger">';
 
+    console.log(errors);
     if(typeof errors === 'string'){
         errorHtml += `<li>${errors}</li>`;
 

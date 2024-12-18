@@ -85,7 +85,7 @@
                             <p><strong>Price:</strong> {{ formatPrice($product->price) }} VNĐ</p>
                             <p class="product-description">{{ $product->contents }}</p>
                             <!-- Add to Cart Button -->
-                            <a href="{{ route('cart.addProduct', $product->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
+                            <a href="{{ route('front.cart.addProduct', $product->id) }}" class="btn btn-success btn-block btn-product">Thêm vào giỏ hàng</a>
                             <div class="btn-container">
                                 <button type="button" class="btn favorite-btn" data-id="{{ $product->id }}">
                                     <span class="heart-icon {{ in_array($product->id, $favoriteList) ? 'active' : '' }}">&#10084;</span>

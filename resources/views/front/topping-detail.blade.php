@@ -145,7 +145,7 @@
                     </div>
                     <hr>
                     <!-- Thêm vào giỏ hàng (luôn nằm dưới cùng) -->
-                    <form action="{{ route('cart.addTopping', $topping->id) }}" method="get">
+                    <form action="{{ route('front.cart.addTopping', $topping->id) }}" method="get">
                         <div class="input-group detail-actions">
                             <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="max-width: 100px;">
                             <button type= "submit" class="btn btn-success" type="button">Thêm vào giỏ hàng</button>

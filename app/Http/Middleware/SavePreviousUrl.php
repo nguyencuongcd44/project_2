@@ -19,10 +19,10 @@ class SavePreviousUrl
     protected $except = [ // Loại trừ middleware khỏi route này
         'account.login',
         'account.check_login', 
-        'password.forgot',
-        'forgotPassword.sendEmail',
-        'password.reset',
-        'password.reset.form'
+        'front.forgot-password',
+        'front.forgot-password.sendEmail',
+        'front.password.reset',
+        'front.password.reset.form'
     ];
 
     public function handle(Request $request, Closure $next): Response

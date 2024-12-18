@@ -82,7 +82,7 @@
                     <td style="">
                         <div class="text-center" style="margin-top: 10px;">
                             <input type="number" name="quantity" value="1" class="form-control text-center" min="1" style="width: 100%; margin: 10px auto;">
-                            <a href="{{ route('cart.add', $product['id']) }}" class="btn btn-success btn-block" type="button">Thêm vào giỏ hàng</a>
+                            <a href="{{ route('front.cart.addProduct', $product['id']) }}" class="btn btn-success btn-block" type="button">Thêm vào giỏ hàng</a>
                         </div>
                     </td>
                 </tr>

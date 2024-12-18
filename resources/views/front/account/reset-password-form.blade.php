@@ -9,7 +9,7 @@
                     <h3 class="panel-title text-center">Đặt Lại Mật Khẩu</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ route('password.reset') }}" method="POST" role="form">
+                    <form action="{{ route('front.password.reset') }}" method="POST" role="form">
                         @csrf
                         <!-- Token Reset Password -->
                         <input type="hidden" name="token" value="{{ $tokenRecord->token }}">
